@@ -26,15 +26,12 @@ CREATE TABLE IF NOT EXISTS `resources` (
 
 CREATE TABLE IF NOT EXISTS `category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(80) NOT NULL,
+  `type` varchar(80) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
-INSERT INTO `category` (type) 
-SELECT DISTINCT type FROM (
-  VALUES ('academic'), ('life'), ('campus'), ('current_student'), ('incoming_student'), ('alumni')
-) AS new_category(type)
-WHERE NOT EXISTS (SELECT 1 FROM `category` WHERE category.type = new_category.type)
+INSERT IGNORE INTO `category` (id, type) 
+VALUES (1, 'academic'), (2,'life'), (3,'campus'), (4, 'current_student'), (5, 'incoming_student'), (6, 'alumni');
 
 CREATE TABLE IF NOT EXISTS `resource_category` (
   `resource_id` int(11) NOT NULL,
