@@ -12,11 +12,13 @@ The script will build a customized mysql8.0 image from the dockerfile, which is 
 
 ### Access DB in Docker Container
 
-Run command `docker exec -it wsource mysql -uroot -pmy-secret-pw`
+Run command `docker exec -it dbcontainer mysql -uroot -pmy-secret-pw`
 
 ```
-    mysql> use mydb;
+    mysql> use wsourcedb;
     mysql> show tables;
+    mysql> describe [table name];
+    mysql> select * from [table name];
 ```
 
 ## DB Schema
