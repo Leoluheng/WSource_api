@@ -1,10 +1,12 @@
 package com.WSource.apiServer.entity;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+@Entity
+@Table(name="resources")
 public class Resource {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -13,14 +15,15 @@ public class Resource {
     @ManyToOne
     private User user;
 
-    private Timestamp created_at;
+    @Column(name="created_at")
+    private Date createdAt;
 
     private String title;
 
     private String content;
 
     @ManyToMany
-    private List<Category> categories = new ArrayList<>();
+    private List<Category> categories;
 
 
     public Integer getId() {
@@ -38,4 +41,16 @@ public class Resource {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Date getCreatedAt() { return createdAt; }
+
+    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+
+    public String getTitle() { return title; }
+
+    public void setTitle(String title) { this.title = title; }
+
+    public String getContent() { return content; }
+
+    public void setContent(String content) { this.content = content; }
 }

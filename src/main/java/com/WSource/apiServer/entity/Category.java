@@ -3,6 +3,7 @@ package com.WSource.apiServer.entity;
 
 import javax.persistence.*;
 
+@Entity
 public class Category {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -17,4 +18,9 @@ public class Category {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public String getLabel() { return label; }
+
+    public void setLabel(String label) { this.label = label; }
+
 }
