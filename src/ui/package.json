@@ -12,7 +12,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "REACT_APP_SERVER_URL=http://localhost:8080l/api/v1/ react-scripts start ",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -34,5 +34,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "axios": "^0.21.1",
+    "react-cookie": "^4.0.3",
+    "react-router-dom": "^5.2.0"
   }
 }
