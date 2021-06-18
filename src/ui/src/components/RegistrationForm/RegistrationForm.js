@@ -6,6 +6,7 @@ import { withRouter } from "react-router-dom";
 
 function RegistrationForm(props) {
     const [state , setState] = useState({
+        name : "",
         email : "",
         password : "",
         confirmPassword: "",
@@ -22,8 +23,9 @@ function RegistrationForm(props) {
         if(state.email.length && state.password.length) {
             props.showError(null);
             const payload={
-                "email":state.email,
-                "password":state.password,
+                "name": state.name,
+                "email": state.email,
+                "accessLeve" : 1
             }
             axios.post(API_BASE_URL+'/user/register', payload)
                 .then(function (response) {
@@ -67,15 +69,26 @@ function RegistrationForm(props) {
         <div className="card col-12 col-lg-4 login-card mt-2 hv-center">
             <form>
                 <div className="form-group text-left">
-                <label htmlFor="exampleInputEmail1">Email address</label>
-                <input type="email" 
-                       className="form-control" 
-                       id="email" 
-                       aria-describedby="emailHelp" 
-                       placeholder="Enter email" 
-                       value={state.email}
-                       onChange={handleChange}
-                />
+                    <label htmlFor="exampleInputName">Name</label>
+                    <input type="text"
+                           className="form-control"
+                           id="name"
+                           aria-describedby="user"
+                           placeholder="Enter Name"
+                           value={state.name}
+                           onChange={handleChange}
+                    />
+                </div>
+                <div className="form-group text-left">
+                    <label htmlFor="exampleInputEmail1">Email address</label>
+                    <input type="email"
+                           className="form-control"
+                           id="email"
+                           aria-describedby="emailHelp"
+                           placeholder="Enter email"
+                           value={state.email}
+                           onChange={handleChange}
+                    />
                 <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
                 </div>
                 <div className="form-group text-left">
