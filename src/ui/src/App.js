@@ -2,7 +2,6 @@ import logo from './logo.svg';
 // import './App.css';
 
 import React, {useState}  from 'react';
-// import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
 
