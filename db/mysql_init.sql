@@ -1,9 +1,3 @@
-USE mysql;
-ALTER USER 'root'@'%' IDENTIFIED BY 'my-secret-pw';
-ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'my-secret-pw';
-FLUSH PRIVILEGES;
-
-CREATE DATABASE IF NOT EXISTS wsourcedb;
 USE wsourcedb;
 
 CREATE TABLE IF NOT EXISTS `users` (
@@ -39,3 +33,6 @@ CREATE TABLE IF NOT EXISTS `resource_category` (
   PRIMARY KEY (`resource_id`),
   CONSTRAINT fk_resource_tag_id FOREIGN KEY (`resource_id`) REFERENCES resources(`id`)
 );
+
+REVOKE ALL ON wsourcedb.* FROM 'wsource'@'%'; 
+GRANT SELECT, INSERT, DELETE, UPDATE ON wsourcedb.* TO 'wsource'@'%';

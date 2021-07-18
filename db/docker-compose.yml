@@ -4,7 +4,9 @@ services:
     build: .
     container_name: dbcontainer
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DB}
     ports:
       - '3306:3306'
