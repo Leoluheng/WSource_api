@@ -33,6 +33,3 @@ CREATE TABLE IF NOT EXISTS `resource_category` (
   PRIMARY KEY (`resource_id`),
   CONSTRAINT fk_resource_tag_id FOREIGN KEY (`resource_id`) REFERENCES resources(`id`)
 );
-
-REVOKE ALL ON wsourcedb.* FROM 'wsource'@'%'; 
-GRANT SELECT, INSERT, DELETE, UPDATE ON wsourcedb.* TO 'wsource'@'%';
