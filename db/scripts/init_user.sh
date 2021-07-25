@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+mysql --protocol=socket -uroot -p$MYSQL_ROOT_PASSWORD <<EOSQL
+CREATE USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
+GRANT SELECT, INSERT, DELETE, UPDATE ON wsourcedb.* TO '$MYSQL_USER'@'%';
+EOSQL

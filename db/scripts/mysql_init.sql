@@ -1,9 +1,4 @@
-USE mysql;
-ALTER USER 'root'@'%' IDENTIFIED BY 'my-secret-pw';
-ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'my-secret-pw';
-FLUSH PRIVILEGES;
-
-CREATE DATABASE IF NOT EXISTS wsourcedb;
+CREATE DATABASE IF NOT EXISTS wsourcedb; -- redundant if using docker-compose
 USE wsourcedb;
 
 CREATE TABLE IF NOT EXISTS `users` (
