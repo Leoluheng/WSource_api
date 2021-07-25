@@ -1,3 +1,4 @@
+CREATE DATABASE IF NOT EXISTS wsourcedb; -- redundant if using docker-compose
 USE wsourcedb;
 
 CREATE TABLE IF NOT EXISTS `users` (
