@@ -13,6 +13,8 @@ public class User {
 
     private String email;
 
+    private String password;
+
     @Column(name="access_level")
     private Integer accessLevel;
 
@@ -47,4 +49,8 @@ public class User {
     public void setAccessLevel(Integer accessLevel){
         this.accessLevel = accessLevel;
     }
+
+    public String getPassword() { return password; }
+
+    public void setPassword(String password) {this.password = password; }
 }

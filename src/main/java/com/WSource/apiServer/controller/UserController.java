@@ -13,6 +13,11 @@ public class UserController {
     @Autowired // This means to get the bean called userRepository
     private UserRepository userRepository;
 
+    @PostMapping(path="/login")
+    public User login(@RequestParam("email") String email, @RequestParam("password") String password) {
+
+    }
+
     @PostMapping(path="/register") // Map ONLY POST Requests
     public @ResponseBody String addNewUser (@RequestBody User user) {
         // @ResponseBody means the returned String is the response, not a view name
