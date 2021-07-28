@@ -3,7 +3,7 @@ package com.WSource.apiServer.entity;
 import javax.persistence.*;
 
 @Entity // This tells Hibernate to make a table out of this class
-@Table(name="user")
+@Table(name="users")
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -14,6 +14,8 @@ public class User {
     private String email;
 
     private String password;
+
+    private String token;
 
     @Column(name="access_level")
     private Integer accessLevel;
@@ -53,4 +55,8 @@ public class User {
     public String getPassword() { return password; }
 
     public void setPassword(String password) {this.password = password; }
+
+    public String getToken() { return token; }
+
+    public void setToken(String token) { this.token = token; }
 }

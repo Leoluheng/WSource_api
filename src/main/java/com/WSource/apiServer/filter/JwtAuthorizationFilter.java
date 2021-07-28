@@ -4,7 +4,10 @@ import com.WSource.apiServer.service.JwtUserDetailService;
 import com.WSource.apiServer.util.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -34,20 +37,29 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
         String jwtToken = header.substring(7);
 
-        String username = null;
+        String email = null;
         try {
-            username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+            email = jwtTokenUtil.getUsernameFromToken(jwtToken);
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid token to parse");
         } catch (ExpiredJwtException e) {
             System.out.println("JWT Token has expired");
         }
 
-        if (username == null) {
-            System.out.println("Invalid token - no username");
+        if (email == null) {
+            System.out.println("Invalid token - no email");
             return;
         }
-        UserDetails userDetails = jwtUserDetailService.loadUserByUsername(username);
+        UserDetails userDetails = jwtUserDetailService.loadUserByUsername(email);
+        if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        } else {
+            SecurityContextHolder.clearContext();
+        }
 
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 }

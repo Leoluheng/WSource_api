@@ -3,8 +3,11 @@ USE wsourcedb;
 
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `password` varchar(255) NOT NULL,
+  `name` varchar(30) NOT NULL,
   `access_level` int(5) NOT NULL,
   `email` varchar(80) NOT NULL,
+  `token` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
