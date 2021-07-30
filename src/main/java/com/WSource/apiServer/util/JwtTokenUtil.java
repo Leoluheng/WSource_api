@@ -64,8 +64,4 @@ public class JwtTokenUtil implements Serializable {
                 .compact();
     }
 
-    public void setSecretKey() {
-        secretKey = DataUtils.generateAESKey(12);
-    }
-
 }

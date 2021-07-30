@@ -1,13 +1,19 @@
 CREATE DATABASE IF NOT EXISTS wsourcedb; -- redundant if using docker-compose
 USE wsourcedb;
 
+CREATE TABLE IF NOT EXISTS `aeskey` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `secret` varchar(255),
+    PRIMARY KEY (`id`)
+);
+
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `password` varchar(255) NOT NULL,
   `name` varchar(30) NOT NULL,
-  `access_level` int(5) NOT NULL,
+  `authority` varchar(30) NOT NULL,
   `email` varchar(80) NOT NULL,
-  `token` varchar(255) NOT NULL,
+  `token` varchar(255),
   PRIMARY KEY (`id`)
 );
 

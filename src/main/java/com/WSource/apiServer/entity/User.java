@@ -17,8 +17,7 @@ public class User {
 
     private String token;
 
-    @Column(name="access_level")
-    private Integer accessLevel;
+    private String authority;
 
     public Integer getId() {
         return id;
@@ -44,12 +43,12 @@ public class User {
         this.email = email;
     }
 
-    public Integer getAccessLevel() {
-        return accessLevel;
+    public String getAuthority() {
+        return authority;
     }
 
-    public void setAccessLevel(Integer accessLevel){
-        this.accessLevel = accessLevel;
+    public void setAuthority(String authority){
+        this.authority = authority;
     }
 
     public String getPassword() { return password; }
