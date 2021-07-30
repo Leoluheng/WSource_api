@@ -1,10 +1,11 @@
 package com.WSource.apiServer.service;
 
-import com.WSource.apiServer.entity.AesKey;
+import com.WSource.apiServer.entity.HS256Key;
 import com.WSource.apiServer.entity.User;
 import com.WSource.apiServer.repository.UserRepository;
 import com.WSource.apiServer.util.DataUtils;
 import com.WSource.apiServer.util.JwtTokenUtil;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -67,21 +68,21 @@ public class UserService {
 
     @Transactional
     public void setSecretKey() {
-        Key secretKey = DataUtils.generateAESKey(256);
+        Key secretKey = DataUtils.generateHS256Key();
         String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
         try {
-            AesKey aesKey = new AesKey();
-            aesKey.setSecret(encodedKey);
-            entityManager.persist(aesKey);
+            HS256Key key = new HS256Key();
+            key.setSecret(encodedKey);
+            entityManager.persist(key);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public Key getSecretKey() {
-        AesKey aesKey = entityManager.find(AesKey.class, 1);
-        byte[] decodedKey = Base64.getDecoder().decode(aesKey.getSecret());
-        SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
+        HS256Key key = entityManager.find(HS256Key.class, 1);
+        byte[] decodedKey = Base64.getDecoder().decode(key.getSecret());
+        SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, SignatureAlgorithm.HS256.getValue());
         return originalKey;
     }
 

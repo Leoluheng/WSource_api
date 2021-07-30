@@ -3,8 +3,8 @@ package com.WSource.apiServer.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name="aeskey")
-public class AesKey {
+@Table(name="HS256Key")
+public class HS256Key {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS wsourcedb; -- redundant if using docker-compose
 USE wsourcedb;
 
-CREATE TABLE IF NOT EXISTS `aeskey` (
+CREATE TABLE IF NOT EXISTS `HS256Key` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `secret` varchar(255),
     PRIMARY KEY (`id`)

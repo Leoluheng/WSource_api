@@ -1,22 +1,19 @@
 package com.WSource.apiServer.util;
 
-import javax.crypto.KeyGenerator;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
 import javax.crypto.SecretKey;
-import java.security.Key;
-import java.security.SecureRandom;
 
 public class DataUtils {
-    public static Key generateAESKey(int keySize) {
-        SecretKey secretKey = null;
+    public static SecretKey generateHS256Key() {
+        SecretKey generatedKey = null;
         try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-            SecureRandom secureRandom = new SecureRandom();
-            keyGenerator.init(keySize, secureRandom);
-            secretKey = keyGenerator.generateKey();
+            generatedKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return secretKey;
+        return generatedKey;
     }
 
 
