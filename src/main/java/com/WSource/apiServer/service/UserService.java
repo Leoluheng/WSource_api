@@ -13,9 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.security.Key;
 import java.util.Base64;
 
@@ -41,7 +42,7 @@ public class UserService {
     private EntityManager entityManager;
 
     public String login(String username, String password) throws Exception {
-        String token = jwtTokenUtil.generateToken(username);
+        String token = jwtTokenUtil.generateToken(username, getSecretKey());
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (AuthenticationException e) {
@@ -55,8 +56,13 @@ public class UserService {
             throw new Exception("Email is already in use");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        return jwtTokenUtil.generateToken(user.getEmail());
+        String token = jwtTokenUtil.generateToken(user.getEmail(), getSecretKey());
+        if (token != null) {
+            userRepository.save(user);
+        } else {
+            throw new Exception("token is generated with error");
+        }
+        return token;
     }
 
     @Transactional
@@ -70,6 +76,13 @@ public class UserService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Key getSecretKey() {
+        AesKey aesKey = entityManager.find(AesKey.class, 1);
+        byte[] decodedKey = Base64.getDecoder().decode(aesKey.getSecret());
+        SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
+        return originalKey;
     }
 
 }

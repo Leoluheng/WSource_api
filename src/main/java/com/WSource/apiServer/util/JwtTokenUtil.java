@@ -1,6 +1,7 @@
 package com.WSource.apiServer.util;
 
 import com.WSource.apiServer.config.JwtProperties;
+import com.WSource.apiServer.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,9 +20,7 @@ public class JwtTokenUtil implements Serializable {
     @Autowired
     JwtProperties jwtProperties;
 
-    private Key secretKey;
-
-    private Claims getClaimsFromToken(String token) {
+    private Claims getClaimsFromToken(String token, Key secretKey) {
         Claims claims = Jwts.parserBuilder()
                             .setSigningKey(secretKey)
                             .build()
@@ -30,37 +29,37 @@ public class JwtTokenUtil implements Serializable {
         return claims;
     }
 
-    public String getUsernameFromToken(String token) {
-        Claims claims = getClaimsFromToken(token);
+    public String getUsernameFromToken(String token, Key secretKey) {
+        Claims claims = getClaimsFromToken(token, secretKey);
         return claims.getSubject();
     }
 
-    public Date getExpiredAt(String token) {
-        Claims claims = getClaimsFromToken(token);
+    public Date getExpiredAt(String token, Key secretKey) {
+        Claims claims = getClaimsFromToken(token, secretKey);
         return claims.getExpiration();
     }
 
-    public Date getIssuedAt(String token) {
-        Claims claims = getClaimsFromToken(token);
+    public Date getIssuedAt(String token, Key secretKey) {
+        Claims claims = getClaimsFromToken(token, secretKey);
         return claims.getIssuedAt();
     }
 
-    private Boolean isTokenExpired(String token) {
-        Date expiration = getExpiredAt(token);
+    private Boolean isTokenExpired(String token, Key secretKey) {
+        Date expiration = getExpiredAt(token, secretKey);
         return expiration.before(new Date());
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        String username = getUsernameFromToken(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    public Boolean validateToken(String token, UserDetails userDetails, Key secretKey) {
+        String username = getUsernameFromToken(token, secretKey);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token, secretKey);
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, Key secretKey) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpireAfter()))
-                .signWith(secretKey, SignatureAlgorithm.ES512)
+                .signWith(secretKey)
                 .compact();
     }
 
