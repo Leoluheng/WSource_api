@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS wsourcedb; -- redundant if using docker-compose
 USE wsourcedb;
 
-CREATE TABLE IF NOT EXISTS `HS256Key` (
+CREATE TABLE IF NOT EXISTS `hs256key` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `secret` varchar(255),
     PRIMARY KEY (`id`)
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `resources` (
+CREATE TABLE IF NOT EXISTS `resource` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(200) NOT NULL,
   `content` longtext NOT NULL,
@@ -36,10 +36,3 @@ CREATE TABLE IF NOT EXISTS `category` (
 
 INSERT IGNORE INTO `category` (id, type) 
 VALUES (1, 'academic'), (2,'life'), (3,'campus'), (4, 'current_student'), (5, 'incoming_student'), (6, 'alumni');
-
-CREATE TABLE IF NOT EXISTS `resource_category` (
-  `resource_id` int(11) NOT NULL,
-  `category_id` int(11) NOT NULL,
-  PRIMARY KEY (`resource_id`),
-  CONSTRAINT fk_resource_tag_id FOREIGN KEY (`resource_id`) REFERENCES resources(`id`)
-);

@@ -3,7 +3,7 @@ package com.WSource.apiServer.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name="HS256Key")
+@Table(name="hs256key")
 public class HS256Key {
 
     @Id

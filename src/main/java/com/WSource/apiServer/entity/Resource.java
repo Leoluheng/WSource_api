@@ -1,12 +1,11 @@
 package com.WSource.apiServer.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="resources")
+@Table(name="resource")
 public class Resource {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -24,7 +23,6 @@ public class Resource {
 
     @ManyToMany
     private List<Category> categories;
-
 
     public Integer getId() {
         return id;

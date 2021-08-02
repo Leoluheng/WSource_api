@@ -6,6 +6,7 @@ import com.WSource.apiServer.repository.UserRepository;
 import com.WSource.apiServer.util.DataUtils;
 import com.WSource.apiServer.util.JwtTokenUtil;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -56,8 +57,9 @@ public class UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new Exception("Email is already in use");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         String token = jwtTokenUtil.generateToken(user.getEmail(), getSecretKey());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setToken(token);
         if (token != null) {
             userRepository.save(user);
         } else {
@@ -82,7 +84,7 @@ public class UserService {
     public Key getSecretKey() {
         HS256Key key = entityManager.find(HS256Key.class, 1);
         byte[] decodedKey = Base64.getDecoder().decode(key.getSecret());
-        SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, SignatureAlgorithm.HS256.getValue());
+        SecretKey originalKey = Keys.hmacShaKeyFor(decodedKey);
         return originalKey;
     }
 
