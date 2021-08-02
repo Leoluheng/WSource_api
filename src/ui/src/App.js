@@ -11,6 +11,7 @@ import RegistrationForm from './components/RegistrationForm/RegistrationForm';
 import Home from './components/Home/Home';
 import PrivateRoute from './utils/PrivateRoute';
 import AlertComponent from './components/AlertComponent/AlertComponent';
+import { ShowPost, AddPost } from './components/Post/AddPost';
 
 function App() {
     const [title, updateTitle] = useState(null);
@@ -31,6 +32,8 @@ function App() {
                         <Route path="/login">
                             <LoginForm showError={updateErrorMessage} updateTitle={updateTitle}/>
                         </Route>
+                        <Route component={ShowPost} path="/ShowPost"></Route>
+                        <Route component={AddPost} path="/addPost"></Route>
                         <PrivateRoute path="/home">
                             <Home/>
                         </PrivateRoute>

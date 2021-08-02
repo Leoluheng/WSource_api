@@ -9,15 +9,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
-@RequestMapping(path="/api/v1/resource")
+@RestController
+//@CrossOrigin(origins = "http://localhost:8080/", maxAge = 3600)
+@RequestMapping(path="api/v1/resource")
 public class ResourceController {
-    @Autowired // This means to get the bean called userRepository
+    @Autowired
     private ResourceRepository resourceRepository;
 
     @PostMapping(path="/add") // Map ONLY POST Requests
     public @ResponseBody
-    String addResource(@RequestParam Resource resource) {
+    String addResource(@RequestBody Resource resource) {
         resourceRepository.save(resource);
         return "Saved";
     }
@@ -32,6 +33,7 @@ public class ResourceController {
     }
 
     @GetMapping(path="/all")
+    public @ResponseBody
     List<Resource> getAllResources() {
         List<Resource> resourceList = null;
         try {
@@ -43,6 +45,7 @@ public class ResourceController {
     }
 
     @DeleteMapping(path="/update")
+    public @ResponseBody
     Boolean updateById(@RequestParam int id, @RequestBody Resource resource) {
         if (!resourceRepository.existsById(id)) {
             return false;
@@ -52,6 +55,7 @@ public class ResourceController {
     }
 
     @DeleteMapping(path="/delete")
+    public @ResponseBody
     Boolean deleteById(@RequestParam int id) {
         if (!resourceRepository.existsById(id)) {
             return false;

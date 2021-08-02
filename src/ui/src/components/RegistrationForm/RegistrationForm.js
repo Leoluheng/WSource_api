@@ -20,12 +20,13 @@ function RegistrationForm(props) {
         }))
     }
     const sendDetailsToServer = () => {
+        console.log("called!!!")
         if(state.email.length && state.password.length) {
             props.showError(null);
             const payload={
                 "name": state.name,
                 "email": state.email,
-                "accessLeve" : 1
+                "accessLevel" : 1
             }
             axios.post(API_BASE_URL+'/user/register', payload)
                 .then(function (response) {
@@ -126,7 +127,6 @@ function RegistrationForm(props) {
                 <span>Already have an account? </span>
                 <span className="loginText" onClick={() => redirectToLogin()}>Login here</span> 
             </div>
-            
         </div>
     )
 }
