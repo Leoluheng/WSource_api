@@ -40,7 +40,12 @@ public class Resource {
 
     private String contentType;
 
-    @ManyToMany
-    private List<Category> categories;
+    // Todo: do we want a list of categories
+    @ManyToOne
+    private Category category;
+
+    // Todo: might want to have tags
+//    @OneToMany
+//    private List<String> tag;
 
 }

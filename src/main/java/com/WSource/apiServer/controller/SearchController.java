@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping(path="api/v1/serach")
+@RequestMapping(path="api/v1/search")
 public class SearchController {
     private final SearchService searchService;
 //    private final ResourceMapper resourceMapper;
