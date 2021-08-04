@@ -42,6 +42,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
         // if a user try to access a resource without having enought permissions
         // http.exceptionHandling().accessDeniedPage("/login");
+
         http.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.cors();
     }
@@ -61,7 +62,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource()
     {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("https://localhost:3000");
+        configuration.addAllowedOrigin("*");
+        configuration.addAllowedHeader("*");
         configuration.setAllowedMethods(Arrays.asList("GET","POST"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
