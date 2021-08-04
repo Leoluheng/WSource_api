@@ -1,54 +1,49 @@
 package com.WSource.apiServer.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+
+@Getter
+@Setter
 @Entity
 @Table(name="resource")
+@Indexed(index = "idx_resource")
 public class Resource {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
 
     @ManyToOne
     private User user;
 
+    @Field
     @Column(name="created_at")
     private Date createdAt;
 
+    @Field
     private String title;
 
+    @Field
     private String content;
 
-    @ManyToMany
-    private List<Category> categories;
+    private String status;
 
-    public Integer getId() {
-        return id;
-    }
+    private String contentType;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    // Todo: do we want a list of categories
+    @ManyToOne
+    private Category category;
 
-    public User getUser() {
-        return user;
-    }
+    // Todo: might want to have tags
+    // @OneToMany
+    // private List<String> tag;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Date getCreatedAt() { return createdAt; }
-
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
-
-    public String getTitle() { return title; }
-
-    public void setTitle(String title) { this.title = title; }
-
-    public String getContent() { return content; }
-
-    public void setContent(String content) { this.content = content; }
 }

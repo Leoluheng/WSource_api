@@ -3,16 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/styles": "^4.11.4",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "@tinymce/tinymce-react": "^3.12.6",
+    "faker": "^5.5.3",
+    "html-react-parser": "^1.2.7",
+    "lodash.debounce": "^4.0.8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
+    "react-search-field": "^2.0.1",
+    "react-select": "^4.3.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "REACT_APP_SERVER_URL=http://localhost:8080l/api/v1/ react-scripts start ",
+    "start": "REACT_APP_SERVER_URL=http://localhost:8080/api/v1 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -37,6 +45,7 @@
   },
   "devDependencies": {
     "axios": "^0.21.1",
+    "eslint": "^7.32.0",
     "react-cookie": "^4.0.3",
     "react-router-dom": "^5.2.0"
   }

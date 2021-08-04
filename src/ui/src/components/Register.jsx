@@ -1,34 +1,34 @@
 import React, {useState} from "react";
 import axios from 'axios';
-import { withRouter } from "react-router-dom";
-import {API_BASE_URL } from '../constants/apiConstants';
+import {withRouter} from "react-router-dom";
+import {API_BASE_URL} from '../constants/apiConstants';
 
 function RegistrationForm(props) {
-    const [state , setState] = useState({
-        email : "",
-        password : "",
+    const [state, setState] = useState({
+        email: "",
+        password: "",
         confirmPassword: "",
         successMessage: null
     })
 
     const handleChange = (e) => {
-        const {id , value} = e.target
+        const {id, value} = e.target
         setState(prevState => ({
             ...prevState,
-            [id] : value
+            [id]: value
         }))
     }
 
     const sendDetailsToServer = () => {
-        if(state.email.length && state.password.length) {
-            const payload={
+        if (state.email.length && state.password.length) {
+            const payload = {
                 "name": state.name,
                 "email": state.email,
-                "accessLeve" : 1
+                "accessLeve": 1
             }
-            axios.post(API_BASE_URL+'/user/register', payload)
+            axios.post(API_BASE_URL + '/user/register', payload)
                 .then(function (response) {
-                    if(response.status === 200){
+                    if (response.status === 200) {
                         console.log("Success");
                     }
                 })
@@ -112,7 +112,7 @@ function RegistrationForm(props) {
                         <div className="col-sm-12 form-group">
                             <button
                                 onClick={handleSubmitClick}
-                                    className="btn btn-default btn-block btn-lg"
+                                className="btn btn-default btn-block btn-lg"
                             >
                                 Setup My Account
                             </button>
