@@ -5,7 +5,7 @@ import {API_BASE_URL} from '../../constants/apiConstants';
 import Select from 'react-select'
 
 function filePickerCallback(callback, value, meta) {
-    if (meta.filetype == 'image') {
+    if (meta.filetype === 'image') {
         var input = document.getElementById('my-file');
         input.click();
         input.onchange = function () {

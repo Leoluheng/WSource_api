@@ -31,14 +31,14 @@ function App() {
                             <Route path="/login">
                                 <LoginForm showError={updateErrorMessage} updateTitle={updateTitle}/>
                             </Route>
-                            <Route component={ShowPost} path="/ShowPost"></Route>
-                            <Route component={AddPost} path="/addPost"></Route>
                             <PrivateRoute path="/home">
                                 <Home/>
                             </PrivateRoute>
+                            <Route component={AddPost} path="/addPost"></Route>
                         </Switch>
                         <AlertComponent errorMessage={errorMessage} hideError={updateErrorMessage}/>
                     </div>
+                    <Route component={ShowPost} path="/ShowPost"></Route>
                 </div>
             </Router>
         </CookiesProvider>

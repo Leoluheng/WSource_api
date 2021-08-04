@@ -19,7 +19,7 @@ import java.util.List;
 @Indexed(index = "idx_resources")
 public class Resource {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
 
     @ManyToOne
