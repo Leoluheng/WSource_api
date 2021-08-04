@@ -1,4 +1,4 @@
-package com.WSource.apiServer.configuration;
+package com.WSource.apiServer.config;
 
 import com.WSource.apiServer.service.IndexingService;
 import lombok.RequiredArgsConstructor;

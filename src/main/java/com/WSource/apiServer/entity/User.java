@@ -1,10 +1,11 @@
 package com.WSource.apiServer.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity // This tells Hibernate to make a table out of this class
-@Table(name="user")
-public class User {
+@Table(name="users")
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
@@ -13,8 +14,9 @@ public class User {
 
     private String email;
 
-    @Column(name="access_level")
-    private Integer accessLevel;
+    private String password;
+
+    private String authority;
 
     public Integer getId() {
         return id;
@@ -40,11 +42,15 @@ public class User {
         this.email = email;
     }
 
-    public Integer getAccessLevel() {
-        return accessLevel;
+    public String getAuthority() {
+        return authority;
     }
 
-    public void setAccessLevel(Integer accessLevel){
-        this.accessLevel = accessLevel;
+    public void setAuthority(String authority){
+        this.authority = authority;
     }
+
+    public String getPassword() { return password; }
+
+    public void setPassword(String password) {this.password = password; }
 }

@@ -7,7 +7,6 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,8 +14,8 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name="resources")
-@Indexed(index = "idx_resources")
+@Table(name="resource")
+@Indexed(index = "idx_resource")
 public class Resource {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -33,7 +32,6 @@ public class Resource {
     private String title;
 
     @Field
-//    @Field(name = "contentFiltered", analyzer = @Analyzer(definition = "stop"))
     private String content;
 
     private String status;
@@ -45,7 +43,7 @@ public class Resource {
     private Category category;
 
     // Todo: might want to have tags
-//    @OneToMany
-//    private List<String> tag;
+    // @OneToMany
+    // private List<String> tag;
 
 }
