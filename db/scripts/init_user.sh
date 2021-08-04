@@ -1,9 +1,6 @@
 #!/bin/bash
 echo '*****************************'
-echo $MYSQL_USER
-echo $MYSQL_ROOT_PASSWORD
-echo $MYSQL_ROOT_PASSWORD
-echo $MYSQL_PASSWORD
+echo 'Creating MySql User wsource'
 echo '*****************************'
 
 set -e

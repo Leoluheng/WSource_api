@@ -5,8 +5,6 @@ import com.WSource.apiServer.entity.User;
 import com.WSource.apiServer.repository.UserRepository;
 import com.WSource.apiServer.util.DataUtils;
 import com.WSource.apiServer.util.JwtTokenUtil;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.security.Key;
@@ -44,48 +41,29 @@ public class UserService {
     private EntityManager entityManager;
 
     public String login(String username, String password) throws Exception {
-        String token = jwtTokenUtil.generateToken(username, getSecretKey());
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            return jwtTokenUtil.generateToken(username);
         } catch (AuthenticationException e) {
             throw new Exception("Invalid username/password supplied");
         }
-        return token;
     }
 
     public String register(User user) throws Exception {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new Exception("Email is already in use");
         }
-        String token = jwtTokenUtil.generateToken(user.getEmail(), getSecretKey());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setToken(token);
-        if (token != null) {
-            userRepository.save(user);
-        } else {
-            throw new Exception("token is generated with error");
-        }
-        return token;
-    }
-
-    @Transactional
-    public void setSecretKey() {
-        Key secretKey = DataUtils.generateHS256Key();
-        String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+        userRepository.save(user);
         try {
-            HS256Key key = new HS256Key();
-            key.setSecret(encodedKey);
-            entityManager.persist(key);
+            return  jwtTokenUtil.generateToken(user.getEmail());
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new Exception("Error happens during token generation");
         }
     }
 
-    public Key getSecretKey() {
-        HS256Key key = entityManager.find(HS256Key.class, 1);
-        byte[] decodedKey = Base64.getDecoder().decode(key.getSecret());
-        SecretKey originalKey = Keys.hmacShaKeyFor(decodedKey);
-        return originalKey;
+    public Iterable<User> findAll() {
+        return userRepository.findAll();
     }
 
 }

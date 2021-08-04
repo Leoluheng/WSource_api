@@ -38,11 +38,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String header = httpServletRequest.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
             String jwtToken = header.substring(7);
-            Key secretKey = userService.getSecretKey();
 
             String email = null;
             try {
-                email = jwtTokenUtil.getUsernameFromToken(jwtToken, secretKey);
+                email = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
                 System.out.println("Invalid token to parse");
             } catch (ExpiredJwtException e) {
@@ -54,7 +53,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 return;
             }
             UserDetails userDetails = jwtUserDetailService.loadUserByUsername(email);
-            if (jwtTokenUtil.validateToken(jwtToken, userDetails, secretKey)) {
+            if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
