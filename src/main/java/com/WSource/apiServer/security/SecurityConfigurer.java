@@ -34,11 +34,11 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, "**/user/register", "**/user/login", "**/key").permitAll();
-//                .and()
-//            .authorizeRequests()
-//                .anyRequest()
-//                .authenticated();
+                .antMatchers(HttpMethod.POST, "/api/v1/user/register", "/api/v1/user/login").permitAll()
+                .and()
+            .authorizeRequests()
+                .anyRequest()
+                .authenticated();
 
         // if a user try to access a resource without having enought permissions
         // http.exceptionHandling().accessDeniedPage("/login");
