@@ -9,6 +9,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
+
 @RestController
 @RequestMapping(path="api/v1/user")
 public class UserController {
@@ -30,7 +33,7 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "Authorization: " + token;
+        return token;
     }
 
     @PostMapping(path="/register")
@@ -41,12 +44,20 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "Authorization: " + token;
+        return token;
     }
 
     @GetMapping(path="/all")
     public @ResponseBody Iterable<User> getAllUsers() {
         // This returns a JSON or XML with the users
         return userService.findAll();
+    }
+
+    // Temporary testing end point for Home Page redirection after login
+    // TODO: create home page and corresponding controllers
+    @GetMapping(path="/me")
+    public void verifyUser(@RequestHeader Map<String, String> headers, HttpServletResponse response) {
+        System.out.println("SHOULD APPEAR AFTER JWT FILTER IS APPLIED");
+        response.setStatus(HttpServletResponse.SC_ACCEPTED);
     }
 }
