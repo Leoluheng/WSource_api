@@ -1,24 +1,17 @@
 package com.WSource.apiServer.service;
 
-import com.WSource.apiServer.entity.HS256Key;
 import com.WSource.apiServer.entity.User;
 import com.WSource.apiServer.repository.UserRepository;
-import com.WSource.apiServer.util.DataUtils;
 import com.WSource.apiServer.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.crypto.SecretKey;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.security.Key;
-import java.util.Base64;
 
 @Service
 public class UserService {
@@ -37,9 +30,6 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     public String login(String username, String password) throws Exception {
         try {
