@@ -4,6 +4,7 @@ import './RegistrationForm.css';
 import {ACCESS_TOKEN_NAME, API_BASE_URL} from '../../constants/apiConstants';
 import {withRouter} from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -15,6 +16,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { Copyright } from '../Copyright/Copyright';
 import welcome from '../../assets/images/welcome.svg';
 
 function RegistrationForm(props) {
@@ -85,13 +87,6 @@ function RegistrationForm(props) {
             padding: theme.spacing(10),
             flexGrow: 1,
         },
-        image: {
-            // backgroundImage: 'url(./../../assets/images/welcome.svg)',
-            // // backgroundImage: 'url(https://source.unsplash.com/random)',
-            // backgroundRepeat: 'no-repeat',
-            // backgroundSize: 'cover',
-            // backgroundPosition: 'center'
-        },
         paper: {
             margin: theme.spacing(5, 4),
             display: 'flex',
@@ -144,11 +139,11 @@ function RegistrationForm(props) {
             className={classes.root}
             spacing={10}
         >
-            <Grid item xs={12} sm={6} className={classes.image} spacing={10}>
+            <Grid item xs={12} sm={6} spacing={10}>
                 <h1>Welcome to WSource</h1>
                 <p>Log in to get your special recommendations!</p>
                 <img className={classes.img} src={welcome}/>
-                <Link href="https://storyset.com/people" className={classes.link} variant="body2">People illustrations by Storyset</Link>
+                <Link href="https://storyset.com/people" variant="body2" color="textSecondary">People illustrations by Storyset</Link>
             </Grid>
             <Grid item xs={12} sm={6} component={Paper} elevation={6} spacing={10}>
                 <div className={classes.paper}>
@@ -214,8 +209,8 @@ function RegistrationForm(props) {
                             value={state.confirmPassword}
                             onChange={handleChange} 
                         />
-                         <FormControlLabel
-                            control={<Checkbox value="allowExtraEmails" color="secondary" />}
+                        <FormControlLabel
+                            control={<Checkbox value="allowExtraEmails" color="primary" />}
                             label="I want to receive inspiration via email."
                         />
                         <Button
@@ -240,9 +235,9 @@ function RegistrationForm(props) {
                     </Grid>
                 </div>
             </Grid>
-            <Grid>
-
-            </Grid>
+            <Box mt={5}>
+                <Copyright />
+            </Box>
         </Grid>
     )
 }
