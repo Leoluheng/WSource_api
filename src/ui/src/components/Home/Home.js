@@ -7,7 +7,8 @@ function Home(props) {
     useEffect(() => {
         axios.get(API_BASE_URL + '/user/me', {headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)}})
             .then(function (response) {
-                if (response.status !== 200) {
+                console.log(response)
+                if (response.status !== 200 && response.status !== 202) {
                     redirectToLogin()
                 }
             })

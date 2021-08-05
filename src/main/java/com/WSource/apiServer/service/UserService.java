@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,6 +65,10 @@ public class UserService {
 
     public Iterable<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public boolean verifyUserIdentity(String token) {
+        return jwtTokenUtil.validateToken(token);
     }
 
 }

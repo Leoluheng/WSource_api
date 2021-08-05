@@ -36,18 +36,17 @@ function LoginForm(props) {
     const handleSubmitClick = (e) => {
         e.preventDefault();
         if (state.email.length && state.password.length) {
-            const payload = {
-                "email": state.email,
-                "password": state.password,
-            }
-            axios.post(API_BASE_URL + '/user/login', payload)
+            const email = state.email
+            const password = state.password
+            axios.post(API_BASE_URL + '/user/login', null, {params: {email, password}})
                 .then(function (response) {
+                    console.log(response)
                     if (response.status === 200) {
                         setState(prevState => ({
                             ...prevState,
                             'successMessage': 'Login successful. Redirecting to home page..'
                         }))
-                        localStorage.setItem(ACCESS_TOKEN_NAME, response.data.token);
+                        localStorage.setItem(ACCESS_TOKEN_NAME, 'Bearer ' + response.data);
                         redirectToHome();
                         props.showError(null)
                     } else if (response.code === 204) {
