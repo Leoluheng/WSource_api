@@ -2,6 +2,7 @@ package com.WSource.apiServer.security;
 
 import com.WSource.apiServer.filter.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -29,12 +30,15 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService jwtUserDetailsService;
 
+    @Autowired
+    private JwtAuthorizationFilter jwtAuthorizationFilter;
+
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/v1/user/register", "/api/v1/user/login").permitAll()
+                .antMatchers("/api/v1/user/register", "/api/v1/user/login", "/api/v1/user/me").permitAll()
                 .and()
             .authorizeRequests()
                 .anyRequest()
@@ -43,8 +47,15 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         // if a user try to access a resource without having enought permissions
         // http.exceptionHandling().accessDeniedPage("/login");
 
-        http.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         http.cors();
+    }
+
+    @Bean
+    public FilterRegistrationBean filterRegistrationBean() {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        registrationBean.setFilter(jwtAuthorizationFilter);
+        return registrationBean;
     }
 
     @Bean

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
+import javax.transaction.Transactional;
 
 @Component
 @PropertySource("classpath:application.properties")
@@ -24,6 +25,7 @@ public class JwtProperties {
     private SecretKey secretKey;
 
     @PostConstruct
+    @Transactional
     protected void init() {
         System.out.println("SET SECRET KEY");
         this.secretKey = configService.getSecretKey();
