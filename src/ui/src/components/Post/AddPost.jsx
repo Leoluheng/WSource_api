@@ -53,11 +53,13 @@ export default class AddPost extends React.Component {
         this.addPost = this.addPost.bind(this);
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleSubjectChange = this.handleSubjectChange.bind(this);
+        this.handleSelectCategory = this.handleSelectCategory.bind(this);
         this.redirectToShowPost = this.redirectToShowPost.bind(this);
         this.state = {
             title: '',
             content: '',
-            categories: []
+            categories: [],
+            selectedCategory: ''
         };
     }
 
@@ -83,7 +85,9 @@ export default class AddPost extends React.Component {
             content: this.state.content,
             // user: 'test_user',
             status: 'pending',
-            contentType: 'html'
+            contentType: 'html',
+            category: this.state.selectedCategory,
+
         }, config)
             .then(function (response) {
                 console.log('reponse from add post is ', response)
@@ -103,6 +107,10 @@ export default class AddPost extends React.Component {
 
     handleSubjectChange(content, editor) {
         this.setState({content})
+    }
+
+    handleSelectCategory(category){
+        this.setState({selectedCategory: category})
     }
 
     redirectToShowPost(){
@@ -144,7 +152,8 @@ export default class AddPost extends React.Component {
                             />
                         </div>
                         <div className="form-group">
-                            <Select options={this.state.categories}
+                            {/*Todo: Change to material Ui*/}
+                            <Select options={this.state.categories} selectOptions={this.handleSelectCategory}
                                     placeholder="Select Post Catagory"/>
                         </div>
                         <button type="button" onClick={this.addPost} id="submit" name="submit"

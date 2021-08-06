@@ -24,11 +24,11 @@ public class Comment {
     @ManyToOne
     private User user;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "resource_id", nullable = false)
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
-    @JsonProperty("post_id")
+    @ManyToOne
+    @JoinColumn(name = "resources_id")
+//    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+//    @JsonIdentityReference(alwaysAsId=true)
+//    @JsonProperty("resource_id")
     private Resource resource;
 
 }

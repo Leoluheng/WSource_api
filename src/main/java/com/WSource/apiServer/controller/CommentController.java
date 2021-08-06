@@ -23,11 +23,11 @@ public class CommentController {
 
     @PostMapping(path="/add") // Map ONLY POST Requests
     public @ResponseBody
-    Boolean addComment(@RequestParam int resourceID, @RequestBody Comment comment) {
-        if (!resourceRepository.existsById(resourceID)){
+    Boolean addComment(@RequestParam int resourceId, @RequestBody Comment comment) {
+        if (!resourceRepository.existsById(resourceId)){
             return false;
         }
-        resourceRepository.findById(resourceID).map(resource -> {
+        resourceRepository.findById(resourceId).map(resource -> {
             comment.setResource(resource);
             return commentRepository.save(comment);
         });
@@ -38,7 +38,7 @@ public class CommentController {
     public @ResponseBody
     Page<Comment> getByResourceId(@RequestParam int resourceId) {
         System.out.println(resourceId);
-        Pageable firstPageWithTwoElements = PageRequest.of(0, 2);
+        Pageable firstPageWithTwoElements = PageRequest.of(0, 100);
         return commentRepository.findByResourceId(resourceId, firstPageWithTwoElements);
     }
 
