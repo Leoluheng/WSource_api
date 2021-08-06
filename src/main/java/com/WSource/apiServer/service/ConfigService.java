@@ -3,22 +3,21 @@ package com.WSource.apiServer.service;
 import com.WSource.apiServer.entity.HS256Key;
 import com.WSource.apiServer.util.DataUtils;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.SecretKey;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.security.Key;
 import java.util.Base64;
 
-@Service
 @Transactional
+@Service
 public class ConfigService {
 
-    @Autowired
+    @PersistenceContext
     private EntityManager entityManager;
-
 
     public String setSecretKey() {
         Key secretKey = DataUtils.generateHS256Key();
