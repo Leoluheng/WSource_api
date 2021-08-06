@@ -13,13 +13,14 @@ import java.security.Key;
 import java.util.Base64;
 
 @Service
+@Transactional
 public class ConfigService {
 
     @Autowired
     private EntityManager entityManager;
 
-    @Transactional
-    public void setSecretKey() {
+
+    public String setSecretKey() {
         Key secretKey = DataUtils.generateHS256Key();
         String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
         try {
@@ -29,14 +30,18 @@ public class ConfigService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return encodedKey;
     }
 
     public SecretKey getSecretKey() {
         HS256Key key = entityManager.find(HS256Key.class, 1);
-        if (key == null) {
-            setSecretKey();
+        String secret;
+        if (key != null) {
+            secret = key.getSecret();
+        } else {
+            secret = setSecretKey();
         }
-        byte[] decodedKey = Base64.getDecoder().decode(key.getSecret());
+        byte[] decodedKey = Base64.getDecoder().decode(secret);
         SecretKey originalKey = Keys.hmacShaKeyFor(decodedKey);
         return originalKey;
     }

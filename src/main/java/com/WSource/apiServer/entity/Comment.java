@@ -28,7 +28,7 @@ public class Comment {
     @JoinColumn(name = "resource_id", nullable = false)
     @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
-    @JsonProperty("post_id")
+    @JsonProperty("resource_id")
     private Resource resource;
 
 }

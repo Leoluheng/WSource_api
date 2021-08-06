@@ -63,4 +63,29 @@ public class ResourceController {
         resourceRepository.deleteById(id);
         return true;
     }
+
+
+    @GetMapping(path="/upvote")
+    public @ResponseBody
+    Boolean upvote(@RequestParam int id){
+        if (!resourceRepository.existsById(id)) {
+            return false;
+        }
+        Resource resource= resourceRepository.findById(id).get();
+        resource.setVoteCount(resource.getVoteCount() + 1);
+        resourceRepository.save(resource);
+        return true;
+    }
+
+    @GetMapping(path="/downvote")
+    public @ResponseBody
+    Boolean downvote(@RequestParam int id) {
+        if (!resourceRepository.existsById(id)) {
+            return false;
+        }
+        Resource resource = resourceRepository.findById(id).get();
+        resource.setVoteCount(resource.getVoteCount() - 1);
+        resourceRepository.save(resource);
+        return true;
+    }
 }

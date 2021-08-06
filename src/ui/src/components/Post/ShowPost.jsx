@@ -15,6 +15,10 @@ import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import { red } from '@material-ui/core/colors';
 import Comments from "../Comments/Comments";
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 const styles = (theme) => ({
     layout: {
@@ -45,20 +49,26 @@ const styles = (theme) => ({
     avatar: {
         backgroundColor: red[500],
     },
+    toolbarSecondary: {
+        justifyContent: 'space-between',
+        overflowX: 'auto',
+    },
 })
+
 class ShowPost extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             posts: [],
             curPost: 0,
-            searchQuery: ""
+            searchQuery: "",
+            activeTabIndex: 0
         };
         this.searchOnChange = this.searchOnChange.bind(this);
         this.getAllPost = this.getAllPost.bind(this);
         this.redirectToAddPost = this.redirectToAddPost.bind(this);
         this.updateCurrentPost = this.updateCurrentPost.bind(this);
-
+        this.handleChangeTab = this.handleChangeTab.bind(this);
     }
     componentDidMount() {
        this.getAllPost()
@@ -106,7 +116,12 @@ class ShowPost extends React.Component {
         this.setState({curPost: value })
     }
 
+    handleChangeTab(event, value){
+        this.setState({ activeTabIndex: value });
+    }
+
     renderPostList(){
+        const { activeTabIndex } = this.state;
         var self = this
         return (
             <div>
@@ -131,6 +146,12 @@ class ShowPost extends React.Component {
                     <Typography gutterBottom variant="h5" component="h2">
                        Search result for " {this.state.searchQuery}"
                     </Typography>
+                    <Toolbar component="nav" variant="dense" className={this.props.classes.toolbarSecondary}>
+                        <Tabs value={activeTabIndex} onChange={this.handleChangeTab}>
+                            <Tab label="Recent" />
+                            <Tab label="Trending" />
+                        </Tabs>
+                    </Toolbar>
                 </Paper>
                 <Paper elevation={0} style={{maxHeight: 800, overflow: 'auto'}}>
                     {
@@ -145,7 +166,8 @@ class ShowPost extends React.Component {
 
     renderContent(){
         if (this.state.posts.length === 0){
-            return <div> content </div>
+            // return <div> No content </div>
+            return <Comments postId={1}/>
         }else {
             const curPost = this.state.curPost
             return (
@@ -163,7 +185,7 @@ class ShowPost extends React.Component {
                         ? <p className="list-group-item-text">{parse(curPost.content)}</p>
                         : <p className="list-group-item-text">{curPost.content}</p>
                     }
-                    <Comments />
+                    <Comments postId={curPost.id}/>
                 </Box>
             )
         }
