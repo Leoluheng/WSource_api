@@ -1,4 +1,4 @@
-:root {
+.comment-page :root {
     --black: #333;
     --white: #fff;
     --gray: #aaa;
@@ -8,46 +8,46 @@
     --font-family: Arial, Helvetica, sans-serif;
 }
 
-* {
+.comment-page * {
     box-sizing: border-box;
 }
 
-body {
+.comment-page body {
     font-family: var(--font-family);
 }
 
-textarea {
+.comment-page textarea {
     font-family: var(--font-family);
     border: none;
     resize: none;
 }
 
-textarea::placeholder {
+.comment-page textarea::placeholder {
     color: var(--gray);
 }
 
-label {
+.comment-page label {
     height: 0;
     width: 0;
     visibility: hidden;
 }
 
-button {
+.comment-page button {
     cursor: pointer;
 }
 
-button:disabled {
+.comment-page button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-button[type="submit"] {
+.comment-page button[type="submit"] {
     background: var(--green);
     color: var(--white);
     border-radius: var(--border-radius);
 }
 
-.comment-box {
+.comment-page .comment-box {
     display: flex;
     flex-wrap: wrap;
     /*max-width: 400px;*/
@@ -61,24 +61,24 @@ button[type="submit"] {
     max-height: 46px;
 }
 
-.header {
+.comment-page .header {
     transition: opacity var(--transition) 0.2s;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-40px);
 }
 
-.user {
+.comment-page .user {
     display: flex;
     align-items: center;
 }
 
-.user img {
+.comment-page .user img {
     border-radius: 20px;
     margin-right: 10px;
 }
 
-.comment-field {
+.comment-page .comment-field {
     color: var(--black);
     transition: transform var(--transition);
     font-size: 18px;
@@ -90,18 +90,18 @@ button[type="submit"] {
     line-height: 1;
 }
 
-.comment-box.expanded .comment-field {
+.comment-page .comment-box.expanded .comment-field {
     /*transform: translateY(40px);*/
     /*transform: translateY(20px);*/
 }
 
-.comment-box.expanded .header {
+.comment-page .comment-box.expanded .header {
     /*transform: translateY(10px);*/
     opacity: 1;
     visibility: visible;
 }
 
-.actions {
+.comment-page .actions {
     width: 100%;
     display: flex;
     align-self: flex-end;
@@ -111,11 +111,11 @@ button[type="submit"] {
     transition: opacity var(--transition) 0.2s;
 }
 
-.comment-box.expanded .actions {
+.comment-page .comment-box.expanded .actions {
     opacity: 1;
 }
 
-.actions button {
+.comment-page .actions button {
     margin-left: 6px;
     font-size: 14px;
     padding: 12px;
@@ -123,10 +123,10 @@ button[type="submit"] {
     line-height: 1;
 }
 
-.actions .cancel {
+.comment-page .actions .cancel {
     background: none;
 }
 
-.comment-box.modified {
+.comment-page .comment-box.modified {
     max-height: unset;
 }

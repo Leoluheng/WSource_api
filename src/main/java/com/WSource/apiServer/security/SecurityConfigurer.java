@@ -27,8 +27,8 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserDetailsService jwtUserDetailsService;
+//    @Autowired
+//    private UserDetailsService jwtUserDetailsService;
 
     @Autowired
     private JwtAuthorizationFilter jwtAuthorizationFilter;
@@ -38,7 +38,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers("/api/v1/user/register", "/api/v1/user/login", "/api/v1/user/me").permitAll()
+                .antMatchers("/api/v1/user/register", "/api/v1/user/login", "/api/v1/resource/all", "/api/v1/resource/add", "/api/v1/comment/add",
+                        "/api/v1/comment/getByResourceId").permitAll()
                 .and()
             .authorizeRequests()
                 .anyRequest()

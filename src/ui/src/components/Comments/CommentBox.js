@@ -35,18 +35,18 @@ export default function CommentBox(props) {
     };
 
     const onSubmit = (e) => {
-
         e.preventDefault();
         props.onCommentSubmit(commentValue);
+        onClose();
         console.log("send the form data somewhere");
     };
 
     return (
-        <div className="container">
+        <div className="container comment-page">
             <form
                 onSubmit={onSubmit}
                 ref={containerRef}
-                className={cn("comment-box", {
+                className={cn("comment-box comment-page", {
                     expanded: isExpanded,
                     collapsed: !isExpanded,
                     modified: commentValue.length > 0
@@ -55,7 +55,7 @@ export default function CommentBox(props) {
                     minHeight: isExpanded ? outerHeight.current : INITIAL_HEIGHT
                 }}
             >
-                <div className="header">
+                <div className="header comment-page">
                     {/*<div className="user">*/}
                     {/*    <img*/}
                     {/*        src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/df/df7789f313571604c0e4fb82154f7ee93d9989c6.jpg"*/}
@@ -64,23 +64,23 @@ export default function CommentBox(props) {
                     {/*    <span>User Name</span>*/}
                     {/*</div>*/}
                 </div>
-                <label htmlFor="comment">What are your thoughts?</label>
+                <label htmlFor="comment comment-page">What are your thoughts?</label>
                 <textarea
                     ref={textRef}
                     onClick={onExpand}
                     onFocus={onExpand}
                     onChange={onChange}
-                    className="comment-field"
+                    className="comment-field comment-page"
                     placeholder="What are your thoughts?"
                     value={commentValue}
                     name="comment"
                     id="comment"
                 />
-                <div className="actions">
-                    <button type="button" className="cancel" onClick={onClose}>
+                <div className="actions comment-page">
+                    <button type="button" className="cancel comment-page" onClick={onClose}>
                         Cancel
                     </button>
-                    <button type="submit" disabled={commentValue.length < 1}>
+                    <button type="submit" className="comment-page" disabled={commentValue.length < 1}>
                         Respond
                     </button>
                 </div>

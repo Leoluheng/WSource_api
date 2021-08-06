@@ -24,10 +24,11 @@ class Comments extends Component {
         super(props);
         this.state = {
             comments: [],
-            isFetching: true
+            isFetching: true,
+            postId: props.postId,
         };
         this.getComments = this.getComments.bind(this)
-        this.onCommentSubmit = this.getComments.bind(this)
+        this.onCommentSubmit = this.onCommentSubmit.bind(this)
     }
 
 
@@ -53,14 +54,25 @@ class Comments extends Component {
         this.getComments();
     }
 
+    componentDidUpdate(prevProps) {
+        if(this.props.postId){
+            console.log(this.props.postId)
+        }
+        if(prevProps.postId !== this.props.postId) {
+            this.setState({postId: this.props.postId});
+            this.getComments();
+        }
+    }
+
     onCommentSubmit(review){
         var self = this;
+        console.log(self.props.postId)
         const config = {
             params:{
                 resourceId: self.props.postId
             }
         };
-        axios.post(API_BASE_URL + '/resource/add', {
+        axios.post(API_BASE_URL + '/comment/add', {
             review:review,
         }, config)
             .then(function (response) {
@@ -68,6 +80,7 @@ class Comments extends Component {
                 if (response.status === 200) {
                     console.log("Success");
                 }
+                self.getComments()
             })
             .catch(function (error) {
                 console.log(error);
@@ -76,18 +89,13 @@ class Comments extends Component {
 
     getComments() {
         var self = this;
-        // axios.get(API_BASE_URL + '/comment/getByResourceId', {
-        //     params: {
-        //         resourceId: self.props.postId
-        //     }
-        // })
-        axios.get('https://jsonplaceholder.typicode.com/posts/1/comments', {
+        axios.get(API_BASE_URL + '/comment/getByResourceId', {
             params: {
                 resourceId: self.props.postId
             }
-        })
-        .then(function (response) {
-            let commentList = response.data.slice(0, 10);
+        }).then(function (response) {
+            console.log(response.data)
+            let commentList = response.data.content;
             self.setState(
                 {
                     comments: commentList,
@@ -97,9 +105,9 @@ class Comments extends Component {
             );
             console.log('Success retrieve all comments')
         })
-        .catch(function (error) {
-            console.log(error);
-        });
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     render() {
@@ -110,7 +118,7 @@ class Comments extends Component {
                     Comments
                 </Typography>
                 <Comment comments={comments} />
-                <CommentBox onCommentSubmit={this.onCommentSubmit}/>
+                <CommentBox onCommentSubmit={this.onCommentSubmit} getComment={this.getComments}/>
             </Box>
         );
     }
