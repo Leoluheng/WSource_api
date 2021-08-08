@@ -65,7 +65,7 @@ public class ResourceController {
     }
 
 
-    @GetMapping(path="/upVote")
+    @GetMapping(path="/upvote")
     public @ResponseBody
     Boolean upvote(@RequestParam int id){
         if (!resourceRepository.existsById(id)) {
@@ -77,7 +77,7 @@ public class ResourceController {
         return true;
     }
 
-    @GetMapping(path="/downVote")
+    @GetMapping(path="/downvote")
     public @ResponseBody
     Boolean downvote(@RequestParam int id) {
         if (!resourceRepository.existsById(id)) {
