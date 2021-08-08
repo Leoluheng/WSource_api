@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name="resource")
+@Table(name="resources")
 @Indexed(index = "idx_resource")
 public class Resource {
     @Id
@@ -36,7 +36,11 @@ public class Resource {
 
     private String status;
 
+    // Todo: change name to contentFormat
     private String contentType;
+
+    // Different section: Services, Offical, Community
+    private String resourceType;
 
     // Todo: do we want a list of categories
     @ManyToOne
@@ -46,4 +50,5 @@ public class Resource {
     // @OneToMany
     // private List<String> tag;
 
+    private Integer voteCount;
 }

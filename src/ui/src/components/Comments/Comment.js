@@ -39,7 +39,8 @@ const Comment = ({ comments }) => {
                             <ListItemText
                                 primary={
                                     <Typography className={classes.fonts}>
-                                        {comment.name}
+                                        {/*{comment.name}*/}
+                                        Andy
                                     </Typography>
                                 }
                                 secondary={
@@ -50,9 +51,10 @@ const Comment = ({ comments }) => {
                                             className={classes.inline}
                                             color="textPrimary"
                                         >
-                                            {comment.email}
+                                            {/*{comment.email}*/}
+                                            2B Student
                                         </Typography>
-                                        {` - ${comment.body}`}
+                                        {` - ${comment.review}`}
                                     </>
                                 }
                             />
