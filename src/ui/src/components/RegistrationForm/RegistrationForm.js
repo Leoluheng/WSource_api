@@ -11,6 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -22,6 +23,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { Copyright } from '../Copyright/Copyright';
 import welcome from '../../assets/images/welcome.svg';
+import { programs } from './programs';
 
 function RegistrationForm(props) {
     const [state, setState] = useState({
@@ -32,8 +34,9 @@ function RegistrationForm(props) {
         successMessage: null,
         nextPage: false,
         year: "",
+        faculty: "",
         program: ""
-    })
+    });
     const handleChange = (e) => {
         const {id, value} = e.target
         setState(prevState => ({
@@ -41,12 +44,24 @@ function RegistrationForm(props) {
             [id]: value
         }))
     }
-    const handleDropDownChange = (event) => {
-        const name = event.target.name;
+    const handleDropDownChange = (e) => {
+        const name = e.target.name;
+        console.log(name);
         setState({
           ...state,
-          [name]: event.target.value,
+          [name]: e.target.value,
         });
+    }
+    const handleMultipleSelectionChange = (e, selection) => {
+        console.log(selection.faculty);
+        if (selection !== null) {
+            // setState(prevState => ({
+            //     ...prevState,
+            //     faculty: selection.faculty,
+            //     program: selection.program
+            // }))
+        }
+        console.log("**********")
     }
     const handlePageChange = () => {
         if (state.email.length && state.password.length) {
@@ -65,9 +80,9 @@ function RegistrationForm(props) {
                 "name": state.name,
                 "email": state.email,
                 "authority": 'ROLE_USER',
-                // TODO: modify backend to connect
-                // "program": state.program,
-                // "year": state.year
+                "faculty": state.faculty,
+                "program": state.program,
+                "year": state.year
             }
             axios.post(API_BASE_URL + '/user/register', payload)
                 .then(function (response) {
@@ -100,6 +115,7 @@ function RegistrationForm(props) {
         props.history.push('/login');
     }
     const handleSubmitClick = (e) => {
+        console.log(state)
         e.preventDefault();
         if (state.password === state.confirmPassword) {
             sendDetailsToServer()
@@ -124,7 +140,6 @@ function RegistrationForm(props) {
                             label="Name"
                             name="name"
                             autoComplete="name"
-                            autoFocus
                             value={state.name}
                             onChange={handleChange}
                         />
@@ -224,31 +239,14 @@ function RegistrationForm(props) {
                                 </NativeSelect>
                             <FormHelperText>Please select your current year of study</FormHelperText>
                         </FormControl>
-                        <FormControl>
-                            <InputLabel htmlFor="program-native-helper">Program</InputLabel>
-                                <NativeSelect
-                                    value={state.program}
-                                    onChange={handleDropDownChange}
-                                    inputProps={{
-                                        name: 'program',
-                                        id: 'program-native-helper',
-                                    }}
-                                    >
-                                    <option aria-label="None" value="" />
-                                    <optgroup label="Arts">
-                                        <option value="a">A</option>
-                                        <option value="b">B</option>
-                                        <option value="c">C</option>
-                                        <option value="d">D</option>
-                                        <option value="e">E</option>
-                                    </optgroup>
-                                    <optgroup label="Engineering">
-                                        <option value="f">F</option>
-                                        <option value="g">G</option>
-                                    </optgroup>
-                                </NativeSelect>
-                            <FormHelperText>Please select your program</FormHelperText>
-                        </FormControl>
+                        <Autocomplete
+                            id="faculty-program"
+                            options={programs}
+                            groupBy={(option) => option.faculty}
+                            getOptionLabel={(option) => option.program}
+                            onChange={handleMultipleSelectionChange}
+                            renderInput={(params) => <TextField {...params} label="Program" />}
+                        />
                         <Grid container spacing={10}>
                             <Grid item xs={6}>
                                 <Button
