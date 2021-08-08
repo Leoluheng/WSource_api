@@ -79,7 +79,7 @@ export default class AddPost extends React.Component {
 
     addPost() {
         var self = this;
-        const config = {};
+        const config = { headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)} };
         axios.post(API_BASE_URL + '/resource/add', {
             title: this.state.title,
             content: this.state.content,
