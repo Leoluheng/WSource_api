@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {CookiesProvider} from 'react-cookie';
 
 import Header from './components/Header/Header';
+import BetterHeader from './components/Header/BetterHeader';
 import LoginForm from './components/LoginForm/LoginForm';
 import RegistrationForm from './components/RegistrationForm/RegistrationForm';
 import Home from './components/Home/Home';
@@ -19,7 +20,7 @@ function App() {
         <CookiesProvider>
             <Router>
                 <div className="App">
-                    <Header title={title}/>
+                    <BetterHeader title={title}/>
                     <div className="container d-flex align-items-center flex-column">
                         <Switch>
                             <Route path="/" exact={true}>

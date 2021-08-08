@@ -148,12 +148,24 @@ class Vote extends Component {
     }
 
     render() {
+        let inputStyleUp = {};
+        let inputStyleDown= {};
+        if(this.state.voteStatus === 1) {
+            inputStyleUp = {
+                stroke: '#b4da55'
+            }
+        }else if (this.state.voteStatus === -1){
+            inputStyleDown = {
+                stroke: '#F33119'
+            }
+        }
         return(
             <div className="vote">
                 <Arrow
                     direction="up"
                     className="vote__arrow vote__arrow--up"
                     onClick={this.upVote}
+                    style={inputStyleUp}
                 />
                 <div className="vote__columns">
                     {this._getCount()}
@@ -162,6 +174,7 @@ class Vote extends Component {
                     direction="down"
                     className="vote__arrow vote__arrow--down"
                     onClick={this.downVote}
+                    style={inputStyleDown}
                 />
             </div>
         )
