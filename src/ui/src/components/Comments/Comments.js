@@ -7,6 +7,7 @@ import {red} from "@material-ui/core/colors";
 import {withStyles} from "@material-ui/core/styles";
 import axios from "axios";
 import {API_BASE_URL} from "../../constants/apiConstants";
+import {Divider} from "@material-ui/core";
 
 
 const styles = (theme) => ({
@@ -39,18 +40,6 @@ class Comments extends Component {
     }
 
     componentDidMount() {
-        // const url = "https://jsonplaceholder.typicode.com/posts/1/comments";
-        // let data = this.fetchData(url);
-        // data.then(comments => {
-        //     let commentList = comments.slice(0, 10);
-        //     this.setState(
-        //         {
-        //             comments: commentList,
-        //             isFetching: false
-        //         },
-        //         () => console.log("New State", this.state.comments)
-        //     );
-        // });
         this.getComments();
     }
 
@@ -114,6 +103,7 @@ class Comments extends Component {
         const { comments, isFetching } = this.state;
         return isFetching ? "Loading..." :  (
             <Box>
+                <Divider />
                 <Typography className={this.props.classes.header} variant="h4">
                     Comments
                 </Typography>

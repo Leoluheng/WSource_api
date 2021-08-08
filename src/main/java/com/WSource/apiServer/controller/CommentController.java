@@ -37,7 +37,6 @@ public class CommentController {
     @GetMapping(path="/getByResourceId")
     public @ResponseBody
     Page<Comment> getByResourceId(@RequestParam int resourceId) {
-        System.out.println(resourceId);
         Pageable firstPageWithTwoElements = PageRequest.of(0, 100);
         return commentRepository.findByResourceId(resourceId, firstPageWithTwoElements);
     }
