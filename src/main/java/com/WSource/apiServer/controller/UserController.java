@@ -57,6 +57,12 @@ public class UserController {
     // TODO: create home page and corresponding controllers
     @GetMapping(path="/me")
     public void verifyUser(@RequestHeader Map<String, String> headers, HttpServletResponse response) {
+        String token = headers.get("token");
+        if (token != null && token.startsWith("Bearer ")) {
+            String jwtToken = token.substring(7);
+            User user = userService.findUserByToken(jwtToken);
+            System.out.println(user);
+        }
         System.out.println("SHOULD APPEAR AFTER JWT FILTER IS APPLIED");
         response.setStatus(HttpServletResponse.SC_ACCEPTED);
     }

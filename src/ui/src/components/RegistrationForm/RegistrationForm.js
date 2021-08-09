@@ -89,7 +89,7 @@ function RegistrationForm(props) {
                             ...prevState,
                             'successMessage': 'Registration successful. Redirecting to home page..'
                         }))
-                        localStorage.setItem(ACCESS_TOKEN_NAME, response.data.token);
+                        localStorage.setItem(ACCESS_TOKEN_NAME, 'Bearer ' + response.data);
                         redirectToHome();
                         props.showError(null)
                     } else {

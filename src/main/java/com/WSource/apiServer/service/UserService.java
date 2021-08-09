@@ -61,7 +61,6 @@ public class UserService {
 
     public User findUserByToken(String token) {
         String email = jwtTokenUtil.getUsernameFromToken(token);
-        return userRepository.findByEmail(token).get();
+        return userRepository.findByEmail(email).get();
     }
-
 }

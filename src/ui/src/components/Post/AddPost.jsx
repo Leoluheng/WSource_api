@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import {Editor} from "@tinymce/tinymce-react";
-import {API_BASE_URL} from '../../constants/apiConstants';
+import {ACCESS_TOKEN_NAME, API_BASE_URL} from '../../constants/apiConstants';
 import Select from 'react-select'
 
 function filePickerCallback(callback, value, meta) {
