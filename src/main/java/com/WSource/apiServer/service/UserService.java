@@ -59,4 +59,8 @@ public class UserService {
         return jwtTokenUtil.validateToken(token);
     }
 
+    public User findUserByToken(String token) {
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+        return userRepository.findByEmail(email).get();
+    }
 }
