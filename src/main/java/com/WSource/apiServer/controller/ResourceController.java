@@ -44,7 +44,7 @@ public class ResourceController {
         return resourceList;
     }
 
-    @DeleteMapping(path="/update")
+    @PostMapping(path="/update")
     public @ResponseBody
     Boolean updateById(@RequestParam int id, @RequestBody Resource resource) {
         if (!resourceRepository.existsById(id)) {

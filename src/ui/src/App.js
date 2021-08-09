@@ -8,6 +8,7 @@ import BetterHeader from './components/Header/BetterHeader';
 import LoginForm from './components/LoginForm/LoginForm';
 import RegistrationForm from './components/RegistrationForm/RegistrationForm';
 import Home from './components/Home/Home';
+import PublicHome from "./components/Home/PublicHome";
 import PrivateRoute from './utils/PrivateRoute';
 import AlertComponent from './components/AlertComponent/AlertComponent';
 import AddPost from './components/Post/AddPost';
@@ -23,9 +24,6 @@ function App() {
                     <BetterHeader title={title}/>
                     <div className="container d-flex align-items-center flex-column">
                         <Switch>
-                            <Route path="/" exact={true}>
-                                <RegistrationForm showError={updateErrorMessage} updateTitle={updateTitle}/>
-                            </Route>
                             <Route path="/register">
                                 <RegistrationForm showError={updateErrorMessage} updateTitle={updateTitle}/>
                             </Route>
@@ -39,6 +37,9 @@ function App() {
                         </Switch>
                         <AlertComponent errorMessage={errorMessage} hideError={updateErrorMessage}/>
                     </div>
+                    <Route path="/" exact={true}>
+                        <PublicHome/>
+                    </Route>
                     <Route component={ShowPost} path="/ShowPost"></Route>
                 </div>
             </Router>

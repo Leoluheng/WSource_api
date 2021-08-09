@@ -73,7 +73,7 @@ class Vote extends Component {
                 id: this.props.postId
             }
         };
-        axios.get(API_BASE_URL + '/resource/upVote', config)
+        axios.get(API_BASE_URL + '/resource/upvote', config)
             .then(function (response) {
                 if (response.status === 200) {
                     console.log("Success");
@@ -90,7 +90,7 @@ class Vote extends Component {
                 id:  this.props.postId
             }
         };
-        axios.get(API_BASE_URL + '/resource/downVote', config)
+        axios.get(API_BASE_URL + '/resource/downvote', config)
             .then(function (response) {
                 if (response.status === 200) {
                     console.log("Success");

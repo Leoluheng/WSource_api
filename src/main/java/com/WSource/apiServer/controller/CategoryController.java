@@ -34,6 +34,16 @@ public class CategoryController {
         return categoryList;
     }
 
+    @PostMapping(path="/update")
+    public @ResponseBody
+    Boolean deleteById(@RequestParam int id, @RequestBody Category category) {
+        if (!categoryRepository.existsById(id)) {
+            return false;
+        }
+        categoryRepository.save(category);
+        return true;
+    }
+
     @DeleteMapping(path="/delete")
     public @ResponseBody
     Boolean deleteById(@RequestParam int id) {
