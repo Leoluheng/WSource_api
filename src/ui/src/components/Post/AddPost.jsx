@@ -118,7 +118,7 @@ export default class AddPost extends React.Component {
     }
 
     redirectToShowPost(){
-        this.props.history.push("/ShowPost")
+        this.props.history.push("/official")
     }
 
     render() {

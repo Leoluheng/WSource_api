@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import {red} from "@material-ui/core/colors";
 import {withStyles} from "@material-ui/core/styles";
 import axios from "axios";
-import {API_BASE_URL} from "../../constants/apiConstants";
+import {ACCESS_TOKEN_NAME, API_BASE_URL} from "../../constants/apiConstants";
 import {Divider} from "@material-ui/core";
 
 
@@ -57,6 +57,7 @@ class Comments extends Component {
         var self = this;
         console.log(self.props.postId)
         const config = {
+            headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)},
             params:{
                 resourceId: self.props.postId
             }

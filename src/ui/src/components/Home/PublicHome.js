@@ -50,12 +50,8 @@ const useStyles = makeStyles((theme) => ({
 function PublicHome(props) {
     const classes = useStyles();
 
-    function redirectToLogin() {
-        props.history.push('/login');
-    }
-
     function handleExplore(){
-        props.history.push('/ShowPost')
+        props.history.push('/official')
     }
 
     function renderMain(){

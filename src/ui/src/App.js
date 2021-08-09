@@ -40,7 +40,15 @@ function App() {
                     <Route path="/" exact={true}>
                         <PublicHome/>
                     </Route>
-                    <Route component={ShowPost} path="/ShowPost"></Route>
+                    <Route path="/community">
+                        <ShowPost/>
+                    </Route>
+                    <Route path="/official">
+                        <ShowPost/>
+                    </Route>
+                    <Route path="/service">
+                        <ShowPost/>
+                    </Route>
                 </div>
             </Router>
         </CookiesProvider>
