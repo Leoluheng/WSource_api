@@ -1,13 +1,16 @@
 package com.WSource.apiServer.controller;
 
 import com.WSource.apiServer.entity.Resource;
+import com.WSource.apiServer.entity.User;
 import com.WSource.apiServer.repository.ResourceRepository;
+import com.WSource.apiServer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -16,9 +19,18 @@ public class ResourceController {
     @Autowired
     private ResourceRepository resourceRepository;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping(path="/add") // Map ONLY POST Requests
     public @ResponseBody
-    String addResource(@RequestBody Resource resource) {
+    String addResource(@RequestHeader Map<String, String> headers, @RequestBody Resource resource) {
+        String token = headers.get("token");
+        if (token != null && token.startsWith("Bearer ")) {
+            String jwtToken = token.substring(7);
+            User user = userService.findUserByToken(jwtToken);
+            resource.setUser(user);
+        }
         resourceRepository.save(resource);
         return "Saved";
     }

@@ -1,5 +1,6 @@
 package com.WSource.apiServer.service;
 
+import com.WSource.apiServer.exception.EmailInUseException;
 import com.WSource.apiServer.entity.User;
 import com.WSource.apiServer.repository.UserRepository;
 import com.WSource.apiServer.util.JwtTokenUtil;
@@ -7,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +40,7 @@ public class UserService {
 
     public String register(User user) throws Exception {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new Exception("Email is already in use");
+            throw new EmailInUseException();
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
@@ -59,4 +59,8 @@ public class UserService {
         return jwtTokenUtil.validateToken(token);
     }
 
+    public User findUserByToken(String token) {
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+        return userRepository.findByEmail(email).get();
+    }
 }
