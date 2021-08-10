@@ -1,10 +1,16 @@
 package com.WSource.apiServer.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity // This tells Hibernate to make a table out of this class
-@Table(name="user")
-public class User {
+@Getter
+@Setter
+@Table(name="users")
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
@@ -13,38 +19,13 @@ public class User {
 
     private String email;
 
-    @Column(name="access_level")
-    private Integer accessLevel;
+    private String password;
 
-    public Integer getId() {
-        return id;
-    }
+    private String authority;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private String faculty;
 
-    public String getName() {
-        return name;
-    }
+    private String program;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Integer getAccessLevel() {
-        return accessLevel;
-    }
-
-    public void setAccessLevel(Integer accessLevel){
-        this.accessLevel = accessLevel;
-    }
+    private String year;
 }

@@ -1,0 +1,48 @@
+$default: #525558;
+$success: #b4da55;
+$danger: #F33119;
+
+.vote {
+    //font-family: 'Arimo', sans-serif;
+    text-align: center;
+    color: $default;
+    user-select: none;
+    //cursor: default;
+    //position: absolute;
+    //top: 50%;
+    //left: 50%;
+    //transform: translate(-50%, -50%);
+}
+
+.vote__arrow {
+    width: 40px;
+    fill: none;
+    stroke-width: 2;
+    stroke: lighten($default, 35%);
+    cursor: pointer;
+    transition: transform 150ms ease-in-out;
+
+    &:active {
+         transform: scale(1.15);
+     }
+
+    &--up:active {
+        stroke: $success;
+     }
+
+    &--down:active {
+         stroke: $danger;
+     }
+}
+
+.vote__columns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vote__column {
+    height: 20px;
+    font-size: 24px;
+    overflow: hidden;
+}

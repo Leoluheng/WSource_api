@@ -1,56 +1,70 @@
 package com.WSource.apiServer.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+
+@Getter
+@Setter
 @Entity
 @Table(name="resources")
+@Indexed(index = "idx_resource")
 public class Resource {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
 
     @ManyToOne
     private User user;
 
+    @Field
+    @CreationTimestamp
     @Column(name="created_at")
-    private Date createdAt;
+    private Timestamp createdAt;
 
+    @Column
+    @UpdateTimestamp
+    private Timestamp updateAt;
+
+    @Field
     private String title;
 
+    @Field
+    @Lob
+    @Column(length=1000000)
     private String content;
 
-    @ManyToMany
-    private List<Category> categories;
+    private String status;
 
+    // Todo: change name to contentFormat
+    private String contentType;
 
-    public Integer getId() {
-        return id;
-    }
+    // Different section: Services, Offical, Community
+    private String resourceType;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    // Todo: do we want a list of categories
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="category_id")
+    private Category category;
 
-    public User getUser() {
-        return user;
-    }
+    // Todo: might want to have tags
+    // @OneToMany
+    // private List<String> tag;
+    @ColumnDefault("0")
+    private Integer voteCount;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Date getCreatedAt() { return createdAt; }
-
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
-
-    public String getTitle() { return title; }
-
-    public void setTitle(String title) { this.title = title; }
-
-    public String getContent() { return content; }
-
-    public void setContent(String content) { this.content = content; }
+    @ColumnDefault("0")
+    private Integer viewCount;
 }

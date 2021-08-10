@@ -3,6 +3,8 @@ services:
   mysql:
     build: db
     container_name: dbcontainer
+    env_file:
+      - .env
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DB}

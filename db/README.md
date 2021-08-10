@@ -6,7 +6,8 @@ version: MySQL latest
 
 ## Setup
 
-Install Docker and then run `docker compose up` in the root folder.
+Install Docker. First create file `.env` for all the environment variables and run `source .env`.
+Then run `docker compose up` in the root directory.
 
 To rebuild the image use `docker-compose up --build`.
 
