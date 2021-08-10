@@ -2,15 +2,15 @@ package com.WSource.apiServer.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -55,9 +55,7 @@ public class Resource {
     private String resourceType;
 
     // Todo: do we want a list of categories
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="category_id")
-    private Category category;
+    private String category;
 
     // Todo: might want to have tags
     // @OneToMany
@@ -67,4 +65,8 @@ public class Resource {
 
     @ColumnDefault("0")
     private Integer viewCount;
+
+    @OneToMany
+    @Cascade(CascadeType.REMOVE)
+    private List<Comment> commentList;
 }

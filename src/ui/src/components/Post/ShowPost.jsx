@@ -312,7 +312,10 @@ class PostTitle extends React.Component {
                             {post.title}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
-                            Category: {post.category.type}
+                            { post.category ?
+                                `Category: ${post.category}`:
+                                ""
+                            }
                         </Typography>
                     </CardContent>
                 </CardActionArea>
