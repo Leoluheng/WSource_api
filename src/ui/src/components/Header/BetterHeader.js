@@ -82,6 +82,68 @@ function BetterHeader(props) {
         props.history.push('/community')
     }
 
+    function handleLogout() {
+        localStorage.removeItem(ACCESS_TOKEN_NAME)
+        props.history.push('/login')
+    }
+
+    function handleLogin() {
+        props.history.push('/login')
+    }
+
+    function handleRegister() {
+        props.history.push('/register')
+    }
+
+    function handleToHome() {
+        props.history.push('/')
+    }
+
+    function handleToProfile() {
+        handleMenuClose();
+    }
+
+    function handleToManagePost() {
+        handleMenuClose();
+        props.history.push('/managePost')
+    }
+
+    function renderLogin() {
+        if (!localStorage.getItem(ACCESS_TOKEN_NAME)) {
+            return (
+                <Box>
+                    <Button color="inherit" onClick={handleLogin}>Login</Button>
+                    <Button color="inherit" onClick={handleRegister}>Sign up</Button>
+                </Box>
+            )
+        }
+    }
+
+    function renderAccountCircle(){
+        if (localStorage.getItem(ACCESS_TOKEN_NAME)) {
+            return (
+                <IconButton
+                    edge="end"
+                    aria-label="account of current user"
+                    aria-controls={menuId}
+                    aria-haspopup="true"
+                    onClick={handleProfileMenuOpen}
+                    color="inherit"
+                >
+                    <AccountCircle />
+                </IconButton>
+            )
+        }
+    }
+
+    function renderLogout() {
+        if (localStorage.getItem(ACCESS_TOKEN_NAME)) {
+            return (
+                <Button color="inherit" onClick={() => handleLogout()}>Logout</Button>
+            )
+        }
+    }
+
     function renderDrawer() {
         return (<Drawer open={state['drawer']} onClose={toggleDrawer(false)}>
             <div
@@ -128,65 +190,11 @@ function BetterHeader(props) {
                 open={isMenuOpen}
                 onClose={handleMenuClose}
             >
-                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-                <MenuItem onClick={handleMenuClose}>Manage Posts</MenuItem>
+                <MenuItem onClick={handleToProfile}>Profile</MenuItem>
+                <MenuItem onClick={handleToManagePost}>Manage Posts</MenuItem>
             </Menu>
         )
     }
-
-    function renderAccountCircle(){
-        if (props.location.pathname === '/home') {
-            return (
-                <IconButton
-                    edge="end"
-                    aria-label="account of current user"
-                    aria-controls={menuId}
-                    aria-haspopup="true"
-                    onClick={handleProfileMenuOpen}
-                    color="inherit"
-                >
-                    <AccountCircle />
-                </IconButton>
-            )
-        }
-    }
-
-    function renderLogout() {
-        if (props.location.pathname === '/home') {
-            return (
-                <Button color="inherit" onClick={() => handleLogout()}>Logout</Button>
-            )
-        }
-    }
-
-    function handleLogout() {
-        localStorage.removeItem(ACCESS_TOKEN_NAME)
-        props.history.push('/login')
-    }
-
-    function handleLogin() {
-        props.history.push('/login')
-    }
-
-    function handleRegister() {
-        props.history.push('/register')
-    }
-
-    function handleToHome() {
-        props.history.push('/')
-    }
-
-    function renderLogin() {
-        if (props.location.pathname === '/') {
-            return (
-                <Box>
-                    <Button color="inherit" onClick={handleLogin}>Login</Button>
-                    <Button color="inherit" onClick={handleRegister}>Sign up</Button>
-                </Box>
-            )
-        }
-    }
-
 
     return (
         <div className={classes.root}>

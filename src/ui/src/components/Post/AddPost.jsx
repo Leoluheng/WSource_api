@@ -3,7 +3,8 @@ import React from 'react';
 import {Editor} from "@tinymce/tinymce-react";
 import {ACCESS_TOKEN_NAME, API_BASE_URL} from '../../constants/apiConstants';
 import Select from 'react-select'
-
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 function filePickerCallback(callback, value, meta) {
     if (meta.filetype === 'image') {
         var input = document.getElementById('my-file');
@@ -20,31 +21,6 @@ function filePickerCallback(callback, value, meta) {
             reader.readAsDataURL(file);
         };
     }
-    // if (meta.filetype == 'image') {
-    //
-    //     var input = document.getElementById('image-upload-tinymce');
-    //     input.click();
-    //
-    //     input.onchange = () => {
-    //         var file = input.files[0];
-    //         var reader = new FileReader();
-    //
-    //         reader.onload = (e) => {
-    //             var img = new Image();
-    //             img.src = reader.result;
-    //
-    //             callback(e.target.result, {
-    //                 alt: file.name
-    //             });
-    //
-    //             // var delay = debounce(self.onEditorChange, 10000);
-    //             //
-    //             // delay();
-    //         };
-    //
-    //         reader.readAsDataURL(file);
-    //     };
-    // }
 }
 
 export default class AddPost extends React.Component {
@@ -59,7 +35,8 @@ export default class AddPost extends React.Component {
             title: '',
             content: '',
             categories: [],
-            selectedCategory: ''
+            selectedCategory: '',
+            isModify: false
         };
     }
 
@@ -75,10 +52,26 @@ export default class AddPost extends React.Component {
                 .catch(function (error) {
                 console.log('error is ', error);
             });
+        if(this.props.match.params && this.props.match.params.postId){
+            self.setState({isModify:true})
+            const config = {
+                headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)},
+                params:{
+                    resourceId: self.props.match.params.postId
+                }
+            };
+            axios.get(API_BASE_URL + '/resource/getById', config).then(function (response) {
+                const post = response.data
+                self.setState({title: post.title, content: post.content})
+            })
+                .catch(function (error) {
+                    console.log('error is ', error);
+                });
+        }
     }
 
     addPost() {
-        var self = this;
+        const self = this;
         const config = { headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)} };
         axios.post(API_BASE_URL + '/resource/add', {
             title: self.state.title,
@@ -95,6 +88,34 @@ export default class AddPost extends React.Component {
         }, config)
             .then(function (response) {
                 console.log('reponse from add post is ', response)
+                if (response.status === 200) {
+                    console.log("Success");
+                    self.redirectToShowPost()
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+
+    modifyPost() {
+        const self = this;
+        const config = {
+            headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)},
+            params:{
+                resourceId: self.props.match.params.postId
+            }
+        };
+        axios.post(API_BASE_URL + '/resource/update', {
+            title: self.state.title,
+            content: self.state.content,
+            category: {
+                type: self.state.selectedCategory.value
+            },
+        }, config)
+            .then(function (response) {
+                console.log('Reponse from modify post is ', response)
                 if (response.status === 200) {
                     console.log("Success");
                     self.redirectToShowPost()
@@ -128,8 +149,9 @@ export default class AddPost extends React.Component {
                     <form role="form">
                         <br styles="clear:both"/>
                         <div className="form-group">
-                            <input type="text" onChange={this.handleTitleChange} className="form-control" id="title"
-                                   name="title" placeholder="Title" required/>
+                            <TextField id="title" name="title" label="Title" className="form-control"
+                                       variant="outlined" fullWidth required value={this.state.title}
+                                       onChange={this.handleTitleChange}/>
                         </div>
                         <div className="form-group">
                             <input id="my-file" type="file" name="my-file" style={{display: "none"}} onChange=""/>
@@ -160,12 +182,18 @@ export default class AddPost extends React.Component {
                             <Select options={this.state.categories}  onChange={this.handleSelectCategory}
                                     placeholder="Select Post Catagory"/>
                         </div>
-                        <button type="button" onClick={this.addPost} id="submit" name="submit"
-                                className="btn btn-primary pull-right">Add Post
-                        </button>
-                        <button type="button" onClick={this.redirectToShowPost} id="backButton" name="Back"
-                                className="btn btn-primary pull-right">Back
-                        </button>
+                        {
+                            this.state.isModify ?
+                                (<Button variant="contained" color="primary" onClick={this.modifyPost} name="submit">
+                                    Update Post
+                                </Button>) :
+                                (<Button variant="contained" color="primary" onClick={this.addPost} name="submit">
+                                    Submit Post
+                                </Button>)
+                        }
+                        <Button variant="contained" color="secondary" onClick={this.redirectToShowPost} name="cancel">
+                            Cancel
+                        </Button>
                     </form>
                 </div>
             </div>

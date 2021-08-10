@@ -35,7 +35,7 @@ public class ResourceController {
         return "Saved";
     }
 
-    @GetMapping(path="/search")
+    @GetMapping(path="/getById")
     public @ResponseBody
     Resource getById(@RequestParam int id) {
         if (!resourceRepository.existsById(id)) {
