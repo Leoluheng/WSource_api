@@ -35,8 +35,7 @@ public class Comment {
     @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
     @JsonProperty("resources_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @Cascade(CascadeType.DELETE)
+    @Cascade(CascadeType.REMOVE)
     private Resource resource;
 
     @Column(name="created_at")

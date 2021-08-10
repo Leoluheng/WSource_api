@@ -49,6 +49,8 @@ class ManagePost extends React.Component {
             activeTabIndex: 0
         };
         this.getPostByUser = this.getPostByUser.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     componentDidMount() {
@@ -67,12 +69,11 @@ class ManagePost extends React.Component {
     }
 
     handleEdit = (postId) => () => {
-        console.log(postId)
         this.props.history.push(`/updatePost/${postId}`)
     };
 
     handleDelete = (postId) => () => {
-        console.log(postId)
+        const self = this
         const config = {
             headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)},
             params:{
@@ -82,11 +83,12 @@ class ManagePost extends React.Component {
         axios.delete(API_BASE_URL + '/resource/delete', config)
             .then(function (response) {
                 if (response.status === 200) {
-                    console.log("Success");
+                    console.log("Success")
+                    self.getPostByUser()
                 }
             })
             .catch(function (error) {
-                console.log('error is ', error);
+                console.log('error is ', error)
             });
     };
 
