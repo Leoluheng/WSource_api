@@ -38,8 +38,10 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers("/api/v1/user/register", "/api/v1/user/login", "/api/v1/resource/all", "/api/v1/resource/add", "/api/v1/comment/add",
-                        "/api/v1/comment/getByResourceId").permitAll()
+                .antMatchers("/api/v1/user/register", "/api/v1/user/login", "/api/v1/resource/all",
+                        "/api/v1/resource/add", "/api/v1/comment/add",
+                        "/api/v1/comment/getByResourceId", "/api/v1/category/add", "/api/v1/category/all",
+                        "/api/v1/resource/updateViewCount", "/api/v1/resource/upVote", "/api/v1/resource/downVote").permitAll()
                 .and()
             .authorizeRequests()
                 .anyRequest()

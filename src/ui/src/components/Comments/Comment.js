@@ -59,7 +59,7 @@ const Comment = ({ comments }) => {
                                 }
                             />
                         </ListItem>
-                        <Divider />
+                        <Divider variant="middle" />
                     </React.Fragment>
                 );
             })}

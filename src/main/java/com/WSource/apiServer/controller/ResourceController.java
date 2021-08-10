@@ -6,6 +6,7 @@ import com.WSource.apiServer.repository.ResourceRepository;
 import com.WSource.apiServer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,7 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-//@CrossOrigin(origins = "http://localhost:8080/", maxAge = 3600)
 @RequestMapping(path="api/v1/resource")
 public class ResourceController {
     @Autowired
@@ -56,7 +56,7 @@ public class ResourceController {
         return resourceList;
     }
 
-    @DeleteMapping(path="/update")
+    @PostMapping(path="/update")
     public @ResponseBody
     Boolean updateById(@RequestParam int id, @RequestBody Resource resource) {
         if (!resourceRepository.existsById(id)) {
@@ -97,6 +97,18 @@ public class ResourceController {
         }
         Resource resource = resourceRepository.findById(id).get();
         resource.setVoteCount(resource.getVoteCount() - 1);
+        resourceRepository.save(resource);
+        return true;
+    }
+
+    @GetMapping(path="/updateViewCount")
+    public @ResponseBody
+    Boolean updateViewCount(@RequestParam int id) {
+        if (!resourceRepository.existsById(id)) {
+            return false;
+        }
+        Resource resource = resourceRepository.findById(id).get();
+        resource.setViewCount(resource.getViewCount() + 1);
         resourceRepository.save(resource);
         return true;
     }

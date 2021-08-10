@@ -1,9 +1,14 @@
 import React from 'react';
 import axios from 'axios';
+
 import {API_BASE_URL} from '../../constants/apiConstants';
-import { withStyles } from '@material-ui/core/styles';
+
+import moment from 'moment';
 import parse from 'html-react-parser';
 import SearchField from 'react-search-field';
+import Pluralize from 'pluralize';
+
+import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -14,11 +19,14 @@ import Typography from '@material-ui/core/Typography';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import { red } from '@material-ui/core/colors';
-import Comments from "../Comments/Comments";
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+
+import Comments from "../Comments/Comments";
+import Vote from "../Vote/Vote";
+import {withRouter} from "react-router-dom";
 
 const styles = (theme) => ({
     layout: {
@@ -46,6 +54,11 @@ const styles = (theme) => ({
         marginLeft: theme.spacing(4),
         marginRight: theme.spacing(4),
     },
+    emptyContentLayout: {
+        marginLeft: theme.spacing(4),
+        marginRight: theme.spacing(4),
+        minHeight: '80vh'
+    },
     avatar: {
         backgroundColor: red[500],
     },
@@ -55,12 +68,20 @@ const styles = (theme) => ({
     },
 })
 
+const generateNameTag = (user) => {
+    if(user){
+        return `${user.name}-${user.faculty}-${user.program}-${user.year}`
+    }else{
+        return `Admin`
+    }
+}
+
 class ShowPost extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             posts: [],
-            curPost: 0,
+            curPost: null,
             searchQuery: "",
             activeTabIndex: 0
         };
@@ -69,10 +90,13 @@ class ShowPost extends React.Component {
         this.redirectToAddPost = this.redirectToAddPost.bind(this);
         this.updateCurrentPost = this.updateCurrentPost.bind(this);
         this.handleChangeTab = this.handleChangeTab.bind(this);
+        this.updateViewCount = this.updateViewCount.bind(this);
     }
+
     componentDidMount() {
        this.getAllPost()
     }
+
 
     getAllPost(){
         var self = this;
@@ -108,12 +132,30 @@ class ShowPost extends React.Component {
         }
     }
 
-    redirectToAddPost(value){
+    redirectToAddPost(){
         this.props.history.push("/AddPost")
     }
 
-    updateCurrentPost(value){
-        this.setState({curPost: value })
+    updateCurrentPost(curPost){
+        this.setState({curPost: curPost })
+        this.updateViewCount(curPost.id)
+    }
+
+    updateViewCount(resourceId){
+        const config = {
+            params:{
+                id: resourceId
+            }
+        };
+        axios.get(API_BASE_URL + '/resource/updateViewCount', config)
+            .then(function (response) {
+                if (response.status === 200) {
+                    console.log("Success");
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     handleChangeTab(event, value){
@@ -153,34 +195,62 @@ class ShowPost extends React.Component {
                         </Tabs>
                     </Toolbar>
                 </Paper>
-                <Paper elevation={0} style={{maxHeight: 800, overflow: 'auto'}}>
-                    {
-                        this.state.posts.map((post, index) => {
-                            return <PostTitle value={post} onClick={self.updateCurrentPost} classes={this.props.classes}/>
-                        })
-                    }
-                </Paper>
+                { this.state.posts.length?
+                    (
+                        <Paper elevation={0} style={{maxHeight: 800, overflow: 'auto'}}>
+                            {
+                                this.state.posts.map((post, index) => {
+                                    return <PostTitle value={post} onClick={self.updateCurrentPost} classes={this.props.classes}/>
+                                })
+                            }
+                        </Paper>
+                    ):
+                    (
+                        <Typography  variant="h5" component="h2" align="center">
+                            No Result Found
+                        </Typography>
+                    )
+                }
             </div>
         )
     }
 
     renderContent(){
         if (this.state.posts.length === 0){
-            // return <div> No content </div>
-            return <Comments postId={1}/>
+            // Empty content
+            return (<Box className={this.props.classes.emptyContentLayout} >
+                <Typography  variant="h5" component="h2" align="center">
+                  Post Not Selected
+                </Typography>
+            </Box>)
         }else {
+            if(!this.state.curPost){
+                this.state.curPost = this.state.posts[0]
+            }
             const curPost = this.state.curPost
+            const date = Date(curPost.createdAt)
+            console.log(curPost)
             return (
                 <Box className={this.props.classes.contentLayout}>
-                    <CardHeader
-                        avatar={
-                            <Avatar aria-label="recipe" className={this.props.classes.avatar}>
-                                R
-                            </Avatar>
-                        }
-                        title="Andy - 4A Student"
-                        subheader="September 14, 2016"
-                    />
+                    <Grid item xs container>
+                        <Grid item xs={9} sm={9} md={9}>
+                            <CardHeader
+                                avatar={
+                                    <Avatar aria-label="recipe" className={this.props.classes.avatar}>
+                                        R
+                                    </Avatar>
+                                }
+                                title="Andy - 4A Student"
+                                subheader={moment(date).format('MMMM Do YYYY') + " - " + Pluralize("view", curPost.viewCount, true)}
+                            />
+                        </Grid>
+                        <Grid item xs={3} sm={3} md={3}>
+                            <Vote vote={curPost.voteCount} postId={curPost.id} />
+                        </Grid>
+                    </Grid>
+                    <Typography gutterBottom variant="h5" component="h2">
+                        {curPost.title}
+                    </Typography>
                     {curPost.contentType && curPost.contentType === "html"
                         ? <p className="list-group-item-text">{parse(curPost.content)}</p>
                         : <p className="list-group-item-text">{curPost.content}</p>
@@ -222,6 +292,9 @@ class PostTitle extends React.Component {
     }
 
     render() {
+        const post = this.props.value
+        const date = Date(post.createdAt)
+        console.log(date)
         return (
             <Card>
                 <CardActionArea onClick={this.handleClick}>
@@ -232,15 +305,14 @@ class PostTitle extends React.Component {
                                     R
                                 </Avatar>
                             }
-                            title="Andy - 4A Student"
-                            subheader="September 14, 2016"
+                            title={generateNameTag(post.user)}
+                            subheader={moment(date).format('MMMM Do YYYY') + " - " + Pluralize("view", post.viewCount, true)}
                         />
                         <Typography gutterBottom variant="h5" component="h2">
-                            {this.props.value.title}
+                            {post.title}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
-                            {/*category*/}
-                            Scholarship
+                            Category: {post.category.type}
                         </Typography>
                     </CardContent>
                 </CardActionArea>
@@ -249,4 +321,4 @@ class PostTitle extends React.Component {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(ShowPost);
+export default withRouter(withStyles(styles, { withTheme: true })(ShowPost));

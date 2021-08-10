@@ -4,9 +4,11 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {CookiesProvider} from 'react-cookie';
 
 import Header from './components/Header/Header';
+import BetterHeader from './components/Header/BetterHeader';
 import LoginForm from './components/LoginForm/LoginForm';
 import RegistrationForm from './components/RegistrationForm/RegistrationForm';
 import Home from './components/Home/Home';
+import PublicHome from "./components/Home/PublicHome";
 import PrivateRoute from './utils/PrivateRoute';
 import AlertComponent from './components/AlertComponent/AlertComponent';
 import AddPost from './components/Post/AddPost';
@@ -19,12 +21,9 @@ function App() {
         <CookiesProvider>
             <Router>
                 <div className="App">
-                    <Header title={title}/>
+                    <BetterHeader title={title}/>
                     <div className="container d-flex align-items-center flex-column">
                         <Switch>
-                            <Route path="/" exact={true}>
-                                <RegistrationForm showError={updateErrorMessage} updateTitle={updateTitle}/>
-                            </Route>
                             <Route path="/register">
                                 <RegistrationForm showError={updateErrorMessage} updateTitle={updateTitle}/>
                             </Route>
@@ -38,7 +37,18 @@ function App() {
                         </Switch>
                         <AlertComponent errorMessage={errorMessage} hideError={updateErrorMessage}/>
                     </div>
-                    <Route component={ShowPost} path="/ShowPost"></Route>
+                    <Route path="/" exact={true}>
+                        <PublicHome/>
+                    </Route>
+                    <Route path="/community">
+                        <ShowPost/>
+                    </Route>
+                    <Route path="/official">
+                        <ShowPost/>
+                    </Route>
+                    <Route path="/service">
+                        <ShowPost/>
+                    </Route>
                 </div>
             </Router>
         </CookiesProvider>

@@ -81,13 +81,17 @@ export default class AddPost extends React.Component {
         var self = this;
         const config = { headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)} };
         axios.post(API_BASE_URL + '/resource/add', {
-            title: this.state.title,
-            content: this.state.content,
+            title: self.state.title,
+            content: self.state.content,
             // user: 'test_user',
             status: 'pending',
             contentType: 'html',
-            category: this.state.selectedCategory,
-
+            resourceType: 'Offical',
+            category: {
+                type: self.state.selectedCategory.value
+            },
+            voteCount: 0,
+            viewCount: 0
         }, config)
             .then(function (response) {
                 console.log('reponse from add post is ', response)
@@ -109,12 +113,12 @@ export default class AddPost extends React.Component {
         this.setState({content})
     }
 
-    handleSelectCategory(category){
-        this.setState({selectedCategory: category})
+    handleSelectCategory(selectedOption){
+        this.setState({selectedCategory: selectedOption})
     }
 
     redirectToShowPost(){
-        this.props.history.push("/ShowPost")
+        this.props.history.push("/official")
     }
 
     render() {
@@ -153,7 +157,7 @@ export default class AddPost extends React.Component {
                         </div>
                         <div className="form-group">
                             {/*Todo: Change to material Ui*/}
-                            <Select options={this.state.categories} selectOptions={this.handleSelectCategory}
+                            <Select options={this.state.categories}  onChange={this.handleSelectCategory}
                                     placeholder="Select Post Catagory"/>
                         </div>
                         <button type="button" onClick={this.addPost} id="submit" name="submit"
