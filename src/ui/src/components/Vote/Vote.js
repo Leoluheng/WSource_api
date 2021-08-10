@@ -137,7 +137,6 @@ class Vote extends Component {
 
     _getCount() {
         const counts = this.state.count.toString().split('')
-
         return counts.map(_count => {
             if (_count === '-') {
                 return <span className="vote__column" className="negative__sign">-</span>

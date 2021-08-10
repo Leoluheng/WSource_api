@@ -17,14 +17,14 @@ public class CategoryController {
 
     @PostMapping(path="/add") // Map ONLY POST Requests
     public @ResponseBody
-    String addResource(@RequestBody Category category) {
+    String addCategory(@RequestBody Category category) {
         categoryRepository.save(category);
         return "Saved";
     }
 
     @GetMapping(path="/all")
     public @ResponseBody
-    List<Category> getAllResources() {
+    List<Category> getAllCategory() {
         List<Category> categoryList = null;
         try {
             categoryList = (List<Category>) categoryRepository.findAll();

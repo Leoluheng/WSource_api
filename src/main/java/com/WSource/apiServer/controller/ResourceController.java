@@ -62,6 +62,9 @@ public class ResourceController {
         if (!resourceRepository.existsById(id)) {
             return false;
         }
+        Resource oldResource = resourceRepository.findById(id).get();
+        oldResource.setContent(resource.getContent());
+        oldResource.setCategory(resource.getCategory());
         resourceRepository.save(resource);
         return true;
     }

@@ -55,9 +55,7 @@ public class Resource {
     private String resourceType;
 
     // Todo: do we want a list of categories
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="category_id")
-    private Category category;
+    private String category;
 
     // Todo: might want to have tags
     // @OneToMany

@@ -66,9 +66,9 @@ class ManagePost extends React.Component {
             });
     }
 
-
     handleEdit = (postId) => () => {
         console.log(postId)
+        this.props.history.push(`/updatePost/${postId}`)
     };
 
     handleDelete = (postId) => () => {
