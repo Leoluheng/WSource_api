@@ -96,12 +96,9 @@ class AddPost extends React.Component {
             title: self.state.title,
             content: self.state.content,
             // user: 'test_user',
-            status: 'pending',
             contentType: 'html',
             resourceType: 'Offical',
             category: self.state.selectedCategory,
-            voteCount: 0,
-            viewCount: 0
         }, config)
             .then(function (response) {
                 console.log('reponse from add post is ', response)
@@ -233,11 +230,11 @@ class AddPost extends React.Component {
                     {
                         this.state.isModify ?
                             (<Button variant="contained" color="secondary"
-                                     onClick={this.redirectToShowPost} name="cancel">
+                                     onClick={this.redirectToManagePost} name="cancel">
                                 Cancel
                             </Button>):
                             (<Button variant="contained" color="secondary"
-                                     onClick={this.redirectToManagePost} name="cancel">
+                                     onClick={this.redirectToShowPost} name="cancel">
                                 Cancel
                             </Button>)
                     }

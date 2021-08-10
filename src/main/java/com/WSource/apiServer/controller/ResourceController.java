@@ -30,6 +30,8 @@ public class ResourceController {
             String jwtToken = token.substring(7);
             User user = userService.findUserByToken(jwtToken);
             resource.setUser(user);
+            resource.setViewCount(0);
+            resource.setVoteCount(0);
         }
         resourceRepository.save(resource);
         return "Saved";
@@ -42,6 +44,17 @@ public class ResourceController {
             return null;
         }
         return resourceRepository.findById(id).get();
+    }
+
+    @GetMapping(path="/getByUser")
+    public @ResponseBody
+    Resource getByUser(@RequestHeader Map<String, String> headers) {
+        String token = headers.get("token");
+        if (token != null && token.startsWith("Bearer ")) {
+            String jwtToken = token.substring(7);
+            User user = userService.findUserByToken(jwtToken);
+        }
+        return null;
     }
 
     @GetMapping(path="/all")
@@ -63,9 +76,11 @@ public class ResourceController {
             return false;
         }
         Resource oldResource = resourceRepository.findById(id).get();
+        System.out.println(resource.getTitle());
+        oldResource.setTitle(resource.getTitle());
         oldResource.setContent(resource.getContent());
         oldResource.setCategory(resource.getCategory());
-        resourceRepository.save(resource);
+        resourceRepository.save(oldResource);
         return true;
     }
 

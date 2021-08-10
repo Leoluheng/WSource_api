@@ -48,8 +48,8 @@ public class CommentController {
     @GetMapping(path="/getByResourceId")
     public @ResponseBody
     Page<Comment> getByResourceId(@RequestParam int resourceId) {
-        Pageable firstPageWithTwoElements = PageRequest.of(0, 100);
-        return commentRepository.findByResourceId(resourceId, firstPageWithTwoElements);
+        Pageable firstPage = PageRequest.of(0, 100);
+        return commentRepository.findByResourceId(resourceId, firstPage);
     }
 
     @GetMapping(path="/getByCommentId")

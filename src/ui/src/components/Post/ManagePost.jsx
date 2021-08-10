@@ -76,7 +76,7 @@ class ManagePost extends React.Component {
         const config = {
             headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)},
             params:{
-                resourceId: postId
+               id: postId
             }
         };
         axios.delete(API_BASE_URL + '/resource/delete', config)

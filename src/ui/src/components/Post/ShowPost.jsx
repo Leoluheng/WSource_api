@@ -313,7 +313,7 @@ class PostTitle extends React.Component {
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
                             { post.category ?
-                                `Category: ${post.category.type}`:
+                                `Category: ${post.category}`:
                                 ""
                             }
                         </Typography>
