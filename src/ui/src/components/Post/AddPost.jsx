@@ -50,7 +50,7 @@ class AddPost extends React.Component {
         this.handleSubjectChange = this.handleSubjectChange.bind(this);
         this.handleSelectCategory = this.handleSelectCategory.bind(this);
         this.redirectToShowPost = this.redirectToShowPost.bind(this);
-
+        this.redirectToManagePost = this.redirectToManagePost.bind(this);
         this.state = {
             title: '',
             content: '',

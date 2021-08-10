@@ -6,7 +6,6 @@ import com.WSource.apiServer.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.catalog.Catalog;
 import java.util.List;
 
 @RestController
