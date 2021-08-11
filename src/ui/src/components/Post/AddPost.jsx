@@ -141,13 +141,13 @@ class AddPost extends React.Component {
             title: self.state.title,
             content: self.state.content,
             category: self.state.selectedCategory,
-            updateAt:moment.format('MMMM Do YYYY, h:mm:ss a')
+            updateAt:moment().format('MMMM Do YYYY, h:mm:ss a')
         }, config)
             .then(function (response) {
                 console.log('Reponse from modify post is ', response)
                 if (response.status === 200) {
                     console.log("Success");
-                    self.redirectToShowPost()
+                    self.redirectToManagePost()
                 }
             })
             .catch(function (error) {
