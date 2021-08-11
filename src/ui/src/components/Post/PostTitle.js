@@ -2,12 +2,13 @@ import React from "react";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
-import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import moment from "moment";
-import Pluralize from "pluralize";
+import PostHeader from "./PostHeader";
+import Avatar from "@material-ui/core/Avatar";
 import NameTag from "../Utils/NameTag";
+import Pluralize from "pluralize";
+import CardHeader from "@material-ui/core/CardHeader";
 export default class PostTitle extends React.Component {
     handleClick = () => {
         this.props.onClick(this.props.value);
@@ -15,24 +16,12 @@ export default class PostTitle extends React.Component {
 
     render() {
         const post = this.props.value
-        const date = Date(post.createdAt)
-        console.log(date)
+        const date = moment(this.props.value.createdAt, 'MMMM Do YYYY, h:mm a')
         return (
             <Card>
                 <CardActionArea onClick={this.handleClick}>
+                    <PostHeader post={post}/>
                     <CardContent>
-                        <CardHeader
-                            avatar={
-                                <Avatar aria-label="recipe" className={this.props.classes.avatar}>
-                                    R
-                                </Avatar>
-                            }
-                            // title={generateNameTag(post.user)}
-                            title={
-                                <NameTag user={post.user}/>
-                            }
-                            subheader={moment(date).format('MMMM Do YYYY') + " - " + Pluralize("view", post.viewCount, true)}
-                        />
                         <Typography gutterBottom variant="h5" component="h2">
                             {post.title}
                         </Typography>

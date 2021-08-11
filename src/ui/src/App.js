@@ -40,13 +40,13 @@ function App() {
                     <Route path="/" exact={true}>
                         <PublicHome/>
                     </Route>
-                    <Route path="/community">
+                    <Route path="/Community">
                         <ShowPost resourceType={"Community"}/>
                     </Route>
-                    <Route path="/official">
+                    <Route path="/Official">
                         <ShowPost resourceType={"Official"}/>
                     </Route>
-                    <Route path="/service">
+                    <Route path="/Service">
                         <ShowPost resourceType={"Service"}/>
                     </Route>
                     <Route path="/managePost">

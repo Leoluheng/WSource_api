@@ -43,9 +43,6 @@ class Comments extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if(this.props.postId){
-            console.log(this.props.postId)
-        }
         if(prevProps.postId !== this.props.postId) {
             this.setState({postId: this.props.postId});
             this.getComments();
@@ -54,7 +51,6 @@ class Comments extends Component {
 
     onCommentSubmit(review){
         var self = this;
-        console.log(self.props.postId)
         const config = {
             headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)},
             params:{
@@ -83,7 +79,6 @@ class Comments extends Component {
                 resourceId: self.props.postId
             }
         }).then(function (response) {
-            console.log(response.data)
             let commentList = response.data.content;
             self.setState(
                 {

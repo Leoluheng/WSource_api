@@ -80,6 +80,7 @@ public class ResourceController {
         oldResource.setTitle(resource.getTitle());
         oldResource.setContent(resource.getContent());
         oldResource.setCategory(resource.getCategory());
+        oldResource.setUpdateAt(resource.getUpdateAt());
         resourceRepository.save(oldResource);
         return true;
     }

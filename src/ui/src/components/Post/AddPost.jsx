@@ -14,7 +14,7 @@ import {withRouter} from "react-router-dom";
 import {withStyles} from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-
+import moment from "moment";
 const styles = (theme) => ({
     box: {
         display: "flex",
@@ -97,6 +97,7 @@ class AddPost extends React.Component {
 
     addPost() {
         const self = this;
+        const date = new Date()
         const config = { headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)} };
         axios.post(API_BASE_URL + '/resource/add', {
             title: self.state.title,
@@ -104,6 +105,8 @@ class AddPost extends React.Component {
             contentType: 'html',
             resourceType: self.state.resourceType,
             category: self.state.selectedCategory,
+            createdAt:moment().format('MMMM Do YYYY, h:mm:ss a'),
+            updateAt:moment().format('MMMM Do YYYY, h:mm:ss a')
         }, config)
             .then(function (response) {
                 console.log('reponse from add post is ', response)
@@ -120,6 +123,7 @@ class AddPost extends React.Component {
 
     modifyPost() {
         const self = this;
+        const date = new Date()
         const config = {
             headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)},
             params:{
@@ -130,6 +134,7 @@ class AddPost extends React.Component {
             title: self.state.title,
             content: self.state.content,
             category: self.state.selectedCategory,
+            updateAt:moment.format('MMMM Do YYYY, h:mm:ss a')
         }, config)
             .then(function (response) {
                 console.log('Reponse from modify post is ', response)
@@ -156,7 +161,7 @@ class AddPost extends React.Component {
     }
 
     redirectToShowPost(){
-        this.props.history.push("/official")
+        this.props.history.push(`/${this.state.resourceType}`)
     }
 
     redirectToManagePost(){
