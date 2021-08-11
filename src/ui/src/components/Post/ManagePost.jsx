@@ -89,6 +89,7 @@ class ManagePost extends React.Component {
             })
             .catch(function (error) {
                 console.log('error is ', error)
+                self.props.showError("Post failed to delete");
             });
     };
 

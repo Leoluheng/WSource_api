@@ -23,7 +23,7 @@ function PostHeader(props) {
         <CardHeader
             avatar={
                 <Avatar aria-label="recipe" className={classes.avatar}>
-                    R
+                    {props.post.user.name.charAt(0).toUpperCase()}
                 </Avatar>
             }
             title={

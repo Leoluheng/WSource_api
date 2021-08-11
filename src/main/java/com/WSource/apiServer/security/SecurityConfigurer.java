@@ -39,8 +39,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
                 .antMatchers("/api/v1/user/register", "/api/v1/user/login", "/api/v1/resource/all",
-                        "/api/v1/comment/add", "/api/v1/search/resource",
-                        "/api/v1/comment/getByResourceId", "/api/v1/category/add", "/api/v1/category/all",
+                        "/api/v1/search/resource", "/api/v1/comment/getByResourceId",
+                        "/api/v1/category/add", "/api/v1/category/all",
                         "/api/v1/resource/updateViewCount").permitAll()
                 .and()
             .authorizeRequests()

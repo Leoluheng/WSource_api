@@ -51,25 +51,31 @@ class Comments extends Component {
 
     onCommentSubmit(review){
         var self = this;
-        const config = {
-            headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)},
-            params:{
-                resourceId: self.props.postId
-            }
-        };
-        axios.post(API_BASE_URL + '/comment/add', {
-            review:review,
-        }, config)
-            .then(function (response) {
-                console.log('reponse from add post is ', response)
-                if (response.status === 200) {
-                    console.log("Success");
+        if(review){
+            const config = {
+                headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)},
+                params:{
+                    resourceId: self.props.postId
                 }
-                self.getComments()
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+            };
+            axios.post(API_BASE_URL + '/comment/add', {
+                review:review,
+            }, config)
+                .then(function (response) {
+                    console.log('reponse from add post is ', response)
+                    if (response.status === 200) {
+                        console.log("Success");
+                    }
+                    self.getComments()
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    self.props.showError("Please log in to comment on others post.")
+                });
+        }else{
+            self.props.showError("Cannot submit empty comment.")
+        }
+
     }
 
     getComments() {

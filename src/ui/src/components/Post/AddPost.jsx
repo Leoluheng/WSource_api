@@ -71,15 +71,18 @@ class AddPost extends React.Component {
 
     componentDidMount() {
         var self = this;
-        axios.get(API_BASE_URL + '/category/all', {}).then(function (response) {
-            const categories = response.data.map(category => {
-                return {value: category.type, label: category.type}
-            })
-            self.setState({categories})
-        })
-                .catch(function (error) {
-                console.log('error is ', error);
-            });
+        // Not needed for the demo, add back after
+        // axios.get(API_BASE_URL + '/category/all', {})
+        //     .then(function (response) {
+        //         const categories = response.data.map(category => {
+        //             return {value: category.type, label: category.type}
+        //         })
+        //         self.setState({categories})
+        //     })
+        //         .catch(function (error) {
+        //         console.log('error is ', error);
+        //         self.props.showError("Error occurs when fecthing all categories")
+        //     });
         if(this.props.match.params && this.props.match.params.postId){
             self.setState({isModify:true})
             const config = {
@@ -94,6 +97,7 @@ class AddPost extends React.Component {
             })
                 .catch(function (error) {
                     console.log('error is ', error);
+                    self.props.showError("Error occurs when fecthing post")
                 });
         }
     }

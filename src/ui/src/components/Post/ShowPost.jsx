@@ -4,7 +4,7 @@ import moment from 'moment';
 import parse from 'html-react-parser';
 import {withRouter} from "react-router-dom";
 
-import {API_BASE_URL} from '../../constants/apiConstants';
+import {ACCESS_TOKEN_NAME, API_BASE_URL} from '../../constants/apiConstants';
 
 import { withStyles } from '@material-ui/core/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -119,6 +119,7 @@ class ShowPost extends React.Component {
         this.searchOnChange = this.searchOnChange.bind(this);
         this.getAllPost = this.getAllPost.bind(this);
         this.redirectToAddPost = this.redirectToAddPost.bind(this);
+        this.redirectToLogin = this.redirectToLogin.bind(this);
         this.updateCurrentPost = this.updateCurrentPost.bind(this);
         this.handleChangeTab = this.handleChangeTab.bind(this);
         this.handleSelectCategory = this. handleSelectCategory.bind(this);
@@ -164,10 +165,12 @@ class ShowPost extends React.Component {
             })
             .catch(function (error) {
                 console.log('error is ', error);
+                self.props.showError("Posts failed to load");
             });
     }
 
     search() {
+        var self = this;
         if(this.state.searchQuery !== ""){
             axios.get(API_BASE_URL + '/search/resource', {
                 params: {
@@ -175,10 +178,11 @@ class ShowPost extends React.Component {
                 }
             })
                 .then(function (response) {
-                    this.setState({allPosts: response.data}, ()=> {this.applyFilter()})
+                    self.setState({allPosts: response.data}, ()=> {self.applyFilter()})
                 })
                 .catch(function (error) {
                     console.log('error is ', error);
+                    self.props.showError("Search failed");
                 });
         }
     }
@@ -198,6 +202,7 @@ class ShowPost extends React.Component {
                 })
                 .catch(function (error) {
                     console.log('error is ', error);
+                    self.props.showError("Search failed");
                 });
         }
         // else{
@@ -206,8 +211,25 @@ class ShowPost extends React.Component {
     }
 
     redirectToAddPost(){
+        var self = this
+        axios.get(API_BASE_URL + '/user/me', {headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)}})
+            .then(function (response) {
+                console.log(response)
+                if (response.status !== 200 && response.status !== 202) {
+                    self.redirectToLogin()
+                }
+            })
+            .catch(function (error) {
+                self.redirectToLogin()
+            });
+
         this.props.history.push(`/AddPost/${this.state.resourceType}`)
     }
+
+    redirectToLogin() {
+        this.props.history.push('/login');
+    }
+
 
     updateCurrentPost(curPost){
         this.setState({curPost: curPost })
@@ -389,7 +411,7 @@ class ShowPost extends React.Component {
                                 }
                             </Grid>
                             <Grid item xs={12} className={this.props.classes.title}>
-                                <Comments postId={curPost.id}/>
+                                <Comments postId={curPost.id} showError={this.props.showError}/>
                             </Grid>
                         </Grid>
                     </Grid>
