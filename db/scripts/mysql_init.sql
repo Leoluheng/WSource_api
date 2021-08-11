@@ -16,16 +16,16 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `resource` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(200) NOT NULL,
-  `content` longtext NOT NULL,
-  `create_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` varchar(200) NOT NULL,
-  `user_id` int(11),
-  PRIMARY KEY (`id`),
-  CONSTRAINT fk_resource_user_id FOREIGN KEY (`user_id`) REFERENCES users(`id`)
-);
+--CREATE TABLE IF NOT EXISTS `resource` (
+--  `id` int(11) NOT NULL AUTO_INCREMENT,
+--  `title` varchar(200) NOT NULL,
+--  `content` longtext NOT NULL,
+--  `create_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--  `status` varchar(200) NOT NULL,
+--  `user_id` int(11),
+--  PRIMARY KEY (`id`),
+--  CONSTRAINT fk_resource_user_id FOREIGN KEY (`user_id`) REFERENCES users(`id`)
+--);
 
 CREATE TABLE IF NOT EXISTS `category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

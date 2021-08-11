@@ -104,9 +104,9 @@ class Comments extends Component {
         return isFetching ? "Loading..." :  (
             <Box>
                 <Divider />
-                <Typography className={this.props.classes.header} variant="h4">
+                {/* <Typography className={this.props.classes.header} variant="h4">
                     Comments
-                </Typography>
+                </Typography> */}
                 <Comment comments={comments} />
                 <CommentBox onCommentSubmit={this.onCommentSubmit} getComment={this.getComments}/>
             </Box>
