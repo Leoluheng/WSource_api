@@ -40,9 +40,6 @@ function App() {
                     <Route path="/" exact={true}>
                         <PublicHome/>
                     </Route>
-<<<<<<< HEAD
-                    <Route component={ShowPost} path="/ShowPost"></Route>
-=======
                     <Route path="/community">
                         <ShowPost/>
                     </Route>
@@ -55,9 +52,10 @@ function App() {
                     <Route path="/managePost">
                         <ManagePost/>
                     </Route>
->>>>>>> d472985268faf8ca06fbd2c2c90dfb275735390d
                 </div>
             </Router>
-        </}
+        </CookiesProvider>
+    );
+}
 
 export default App;
