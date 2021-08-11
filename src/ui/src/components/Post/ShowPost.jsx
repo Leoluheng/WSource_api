@@ -5,7 +5,6 @@ import {API_BASE_URL} from '../../constants/apiConstants';
 
 import moment from 'moment';
 import parse from 'html-react-parser';
-import SearchField from 'react-search-field';
 import Pluralize from 'pluralize';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -28,6 +27,7 @@ import Tab from '@material-ui/core/Tab';
 
 import Comments from "../Comments/Comments";
 import Vote from "../Vote/Vote";
+import {withRouter} from "react-router-dom";
 
 const styles = (theme) => ({
     layout: {
@@ -55,6 +55,11 @@ const styles = (theme) => ({
     contentLayout: {
         marginLeft: theme.spacing(4),
         marginRight: theme.spacing(4),
+    },
+    emptyContentLayout: {
+        marginLeft: theme.spacing(4),
+        marginRight: theme.spacing(4),
+        minHeight: '80vh'
     },
     avatar: {
         backgroundColor: red[500],
@@ -86,6 +91,14 @@ const styles = (theme) => ({
       }
 })
 
+const generateNameTag = (user) => {
+    if(user){
+        return `${user.name}-${user.faculty}-${user.program}-${user.year}`
+    }else{
+        return `Admin`
+    }
+}
+
 class ShowPost extends React.Component {
     constructor(props) {
         super(props);
@@ -106,6 +119,7 @@ class ShowPost extends React.Component {
     componentDidMount() {
        this.getAllPost()
     }
+
 
     getAllPost(){
         var self = this;
@@ -141,7 +155,7 @@ class ShowPost extends React.Component {
         }
     }
 
-    redirectToAddPost(value){
+    redirectToAddPost(){
         this.props.history.push("/AddPost")
     }
 
@@ -228,26 +242,43 @@ class ShowPost extends React.Component {
                         </button>
                     </Grid>
                 </Grid>
-                {/* </Paper> */}
-                <Paper elevation={0} style={{maxHeight: 800, overflow: 'auto'}}>
-                    {
-                        this.state.posts.map((post, index) => {
-                            return <PostTitle value={post} onClick={self.updateCurrentPost} classes={this.props.classes}/>
-                        })
+                <Grid container>
+                    { this.state.posts.length?
+                        (
+                            <Paper elevation={0} style={{maxHeight: 800, overflow: 'auto'}}>
+                                {
+                                    this.state.posts.map((post, index) => {
+                                        return <PostTitle value={post} onClick={self.updateCurrentPost} classes={this.props.classes}/>
+                                    })
+                                }
+                            </Paper>
+                        ):
+                        (
+                            <Typography  variant="h5" component="h2" align="center">
+                                No Result Found
+                            </Typography>
+                        )
                     }
-                </Paper>
-            </Grid>
+                </Grid>
+            </Grid>  
         )
     }
 
     renderContent(){
         if (this.state.posts.length === 0){
-            // return <div> No content </div>
+            // Empty content
             return (
                 <Grid container component={Paper} elevation={3} className={this.props.classes.root}>
-                    <Comments postId={1}/>
+                    <Typography  variant="h5" component="subtitle2" align="center">
+                        No Post Selected
+                    </Typography>
                 </Grid>
             )
+            // return (<Box className={this.props.classes.emptyContentLayout} >
+            //     <Typography  variant="h5" component="h2" align="center">
+            //       Post Not Selected
+            //     </Typography>
+            // </Box>)
         }else {
             if(!this.state.curPost){
                 this.state.curPost = this.state.posts[0]
@@ -330,15 +361,17 @@ class PostTitle extends React.Component {
                                     R
                                 </Avatar>
                             }
-                            title="Andy - 4A Student"
+                            title={generateNameTag(post.user)}
                             subheader={moment(date).format('MMMM Do YYYY') + " - " + Pluralize("view", post.viewCount, true)}
                         />
                         <Typography gutterBottom variant="h5" component="h2">
                             {post.title}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
-                            {/*category*/}
-                            Scholarship
+                            { post.category ?
+                                `Category: ${post.category}`:
+                                ""
+                            }
                         </Typography>
                     </CardContent>
                 </CardActionArea>
@@ -347,4 +380,4 @@ class PostTitle extends React.Component {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(ShowPost);
+export default withRouter(withStyles(styles, { withTheme: true })(ShowPost));

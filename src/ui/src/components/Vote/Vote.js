@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {Motion, spring} from 'react-motion';
 import "./Vote.scss";
 import axios from "axios";
-import {API_BASE_URL} from "../../constants/apiConstants";
+import {ACCESS_TOKEN_NAME, API_BASE_URL} from "../../constants/apiConstants";
 const Arrow = ({direction, ...props}) => (
     <svg viewBox="0 0 28 12" {...props}>
         <polyline
@@ -69,6 +69,7 @@ class Vote extends Component {
 
     callUpVote(){
         const config = {
+            headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)},
             params:{
                 id: this.props.postId
             }
@@ -86,6 +87,7 @@ class Vote extends Component {
 
     callDownVote(){
         const config = {
+            headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)},
             params:{
                 id:  this.props.postId
             }
@@ -137,7 +139,6 @@ class Vote extends Component {
 
     _getCount() {
         const counts = this.state.count.toString().split('')
-
         return counts.map(_count => {
             if (_count === '-') {
                 return <span className="vote__column" className="negative__sign">-</span>

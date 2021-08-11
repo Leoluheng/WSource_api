@@ -3,8 +3,10 @@ package com.WSource.apiServer.controller;
 
 import com.WSource.apiServer.entity.Comment;
 import com.WSource.apiServer.entity.Resource;
+import com.WSource.apiServer.entity.User;
 import com.WSource.apiServer.repository.CommentRepository;
 import com.WSource.apiServer.repository.ResourceRepository;
+import com.WSource.apiServer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path="api/v1/comment")
@@ -20,12 +23,20 @@ public class CommentController {
     private CommentRepository commentRepository;
     @Autowired
     private ResourceRepository resourceRepository;
+    @Autowired
+    private UserService userService;
 
     @PostMapping(path="/add") // Map ONLY POST Requests
     public @ResponseBody
-    Boolean addComment(@RequestParam int resourceId, @RequestBody Comment comment) {
+    Boolean addComment(@RequestHeader Map<String, String> headers, @RequestParam int resourceId, @RequestBody Comment comment) {
         if (!resourceRepository.existsById(resourceId)){
             return false;
+        }
+        String token = headers.get("token");
+        if (token != null && token.startsWith("Bearer ")) {
+            String jwtToken = token.substring(7);
+            User user = userService.findUserByToken(jwtToken);
+            comment.setUser(user);
         }
         resourceRepository.findById(resourceId).map(resource -> {
             comment.setResource(resource);
@@ -37,8 +48,8 @@ public class CommentController {
     @GetMapping(path="/getByResourceId")
     public @ResponseBody
     Page<Comment> getByResourceId(@RequestParam int resourceId) {
-        Pageable firstPageWithTwoElements = PageRequest.of(0, 100);
-        return commentRepository.findByResourceId(resourceId, firstPageWithTwoElements);
+        Pageable firstPage = PageRequest.of(0, 100);
+        return commentRepository.findByResourceId(resourceId, firstPage);
     }
 
     @GetMapping(path="/getByCommentId")

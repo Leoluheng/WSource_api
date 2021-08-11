@@ -19,6 +19,9 @@ import HomeIcon from '@material-ui/icons/Home';
 import SchoolIcon from '@material-ui/icons/School';
 import BusinessIcon from '@material-ui/icons/Business';
 import ForumIcon from '@material-ui/icons/Forum';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -40,15 +43,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function BetterHeader(props) {
-    // const capitalize = (s) => {
-    //     if (typeof s !== 'string') return ''
-    //     return s.charAt(0).toUpperCase() + s.slice(1)
-    // }
-    // let title = capitalize(props.location.pathname.substring(1, props.location.pathname.length))
-    // if (props.location.pathname === '/') {
-    //     title = 'Welcome'
-    // }
     const classes = useStyles();
+    const [anchorEl, setAnchorEl] = React.useState(null);
     const [state, setState] = React.useState({
         drawer: false
         }
@@ -61,47 +57,29 @@ function BetterHeader(props) {
         setState({ ...state, ['drawer']: open });
     };
 
-    function renderDrawer() {
-        return (<Drawer open={state['drawer']} onClose={toggleDrawer(false)}>
-            <div
-                className={classes.drawer}
-                role="presentation"
-                onClick={toggleDrawer( false)}
-                onKeyDown={toggleDrawer( false)}
-            >
-                <List>
-                    <Divider />
-                    <ListItem button key={"Home"}>
-                        <ListItemIcon> <HomeIcon /> </ListItemIcon>
-                        <ListItemText primary={"Home"} />
-                    </ListItem>
-                    <Divider />
-                    <ListItem button key={"Services"}>
-                        <ListItemIcon> <SchoolIcon/> </ListItemIcon>
-                        <ListItemText primary={"Services"} />
-                    </ListItem>
-                    <Divider />
-                    <ListItem button key={"University Resources"}>
-                        <ListItemIcon> <BusinessIcon/> </ListItemIcon>
-                        <ListItemText primary={"University Resources"} />
-                    </ListItem>
-                    <Divider />
-                    <ListItem button key={"Community"}>
-                        <ListItemIcon> <ForumIcon/> </ListItemIcon>
-                        <ListItemText primary={"Community"} />
-                    </ListItem>
-                </List>
-                <Divider />
-            </div>
-        </Drawer>)
-    }
+    const isMenuOpen = Boolean(anchorEl);
 
-    function renderLogout() {
-        if (props.location.pathname === '/home') {
-            return (
-                <Button color="inherit" onClick={() => handleLogout()}>Logout</Button>
-            )
-        }
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleProfileMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const menuId = 'primary-search-account-menu';
+
+    function handleToHome(){
+        props.history.push('/')
+    }
+    function handleToService(){
+        props.history.push('/service')
+    }
+    function handleToOfficial(){
+        props.history.push('/official')
+    }
+    function handleToCommunity(){
+        props.history.push('/community')
     }
 
     function handleLogout() {
@@ -121,8 +99,17 @@ function BetterHeader(props) {
         props.history.push('/')
     }
 
+    function handleToProfile() {
+        handleMenuClose();
+    }
+
+    function handleToManagePost() {
+        handleMenuClose();
+        props.history.push('/managePost')
+    }
+
     function renderLogin() {
-        if (props.location.pathname === '/') {
+        if (!localStorage.getItem(ACCESS_TOKEN_NAME)) {
             return (
                 <Box>
                     <Button color="inherit" onClick={handleLogin}>Login</Button>
@@ -132,6 +119,82 @@ function BetterHeader(props) {
         }
     }
 
+    function renderAccountCircle(){
+        if (localStorage.getItem(ACCESS_TOKEN_NAME)) {
+            return (
+                <IconButton
+                    edge="end"
+                    aria-label="account of current user"
+                    aria-controls={menuId}
+                    aria-haspopup="true"
+                    onClick={handleProfileMenuOpen}
+                    color="inherit"
+                >
+                    <AccountCircle />
+                </IconButton>
+            )
+        }
+    }
+
+    function renderLogout() {
+        if (localStorage.getItem(ACCESS_TOKEN_NAME)) {
+            return (
+                <Button color="inherit" onClick={() => handleLogout()}>Logout</Button>
+            )
+        }
+    }
+
+    function renderDrawer() {
+        return (<Drawer open={state['drawer']} onClose={toggleDrawer(false)}>
+            <div
+                className={classes.drawer}
+                role="presentation"
+                onClick={toggleDrawer( false)}
+                onKeyDown={toggleDrawer( false)}
+            >
+                <List>
+                    <Divider />
+                    <ListItem button key={"Home"} onClick={handleToHome}>
+                        <ListItemIcon> <HomeIcon /> </ListItemIcon>
+                        <ListItemText primary={"Home"} />
+                    </ListItem>
+                    <Divider />
+                    <ListItem button key={"Services"} onClick={handleToService}>
+                        <ListItemIcon> <SchoolIcon/> </ListItemIcon>
+                        <ListItemText primary={"Services"} />
+                    </ListItem>
+                    <Divider />
+                    <ListItem button key={"University Resources"} onClick={handleToOfficial}>
+                        <ListItemIcon> <BusinessIcon/> </ListItemIcon>
+                        <ListItemText primary={"University Resources"} />
+                    </ListItem>
+                    <Divider />
+                    <ListItem button key={"Community"} onClick={handleToCommunity}>
+                        <ListItemIcon> <ForumIcon/> </ListItemIcon>
+                        <ListItemText primary={"Community"} />
+                    </ListItem>
+                </List>
+                <Divider />
+            </div>
+        </Drawer>)
+    }
+
+    function renderProfileMenu(){
+        return (
+            <Menu
+                anchorEl={anchorEl}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                id={menuId}
+                keepMounted
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                open={isMenuOpen}
+                onClose={handleMenuClose}
+            >
+                <MenuItem onClick={handleToProfile}>Profile</MenuItem>
+                <MenuItem onClick={handleToManagePost}>Manage Posts</MenuItem>
+            </Menu>
+        )
+    }
 
     return (
         <div className={classes.root}>
@@ -140,16 +203,18 @@ function BetterHeader(props) {
                     <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
                         <MenuIcon />
                     </IconButton>
-                    <Button className={classes.title}>
-                        <Typography variant="button" onClick={handleToHome} >
+                    <Button className={classes.title} onClick={handleToHome} >
+                        <Typography variant="button">
                             WSource
                         </Typography>
                     </Button>
                     {renderLogin()}
                     {renderLogout()}
+                    {renderAccountCircle()}
                 </Toolbar>
             </AppBar>
             {renderDrawer()}
+            {renderProfileMenu()}
         </div>
     );
 }
