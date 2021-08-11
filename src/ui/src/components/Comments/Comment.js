@@ -1,4 +1,6 @@
 import React from "react";
+import Faker from "faker";
+
 import { makeStyles } from "@material-ui/core/styles";
 import {
     List,
@@ -6,10 +8,9 @@ import {
     Divider,
     ListItemText,
     ListItemAvatar,
-    Avatar,
-    Typography
+    Avatar
 } from "@material-ui/core";
-import Faker from "faker";
+
 import NameTag from "../Utils/NameTag";
 
 const useStyles = makeStyles(theme => ({

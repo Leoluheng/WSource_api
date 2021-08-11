@@ -1,8 +1,11 @@
 import React, { Component } from "react";
-import {Motion, spring} from 'react-motion';
-import "./Vote.scss";
 import axios from "axios";
+import {Motion, spring} from 'react-motion';
+
+import "./Vote.scss";
+
 import {ACCESS_TOKEN_NAME, API_BASE_URL} from "../../constants/apiConstants";
+
 const Arrow = ({direction, ...props}) => (
     <svg viewBox="0 0 28 12" {...props}>
         <polyline

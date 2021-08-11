@@ -402,14 +402,14 @@ class ShowPost extends React.Component {
         return (
             <div>
                 <Grid container spacing={2} className={classes.layout}>
-                    <Grid item xs={5} sm={5} md={5}>
+                    <Grid item xs={4} sm={4} md={4}>
                         {/* <Paper className="post-list" elevation={5}> */}
                             {
                                 this.renderPostList()
                             }
                         {/* </Paper> */}
                     </Grid>
-                    <Grid item xs={7} sm={7} md={7}>
+                    <Grid item xs={8} sm={8} md={8}>
                         {/* <Paper className="content" elevation={5} > */}
                             {
                                 this.renderContent()
