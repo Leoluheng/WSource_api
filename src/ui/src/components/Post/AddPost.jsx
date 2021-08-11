@@ -168,7 +168,7 @@ class AddPost extends React.Component {
                                onChange={this.handleTitleChange}/>
                 </div>
                 <div className="form-group">
-                    <input id="my-file" type="file" name="my-file" style={{display: "none"}} onChange=""/>
+                    <input id="my-file" type="file" name="my-file" style={{display: "none"}}/>
                     <Editor tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
                         value={this.state.content}
                         init={{

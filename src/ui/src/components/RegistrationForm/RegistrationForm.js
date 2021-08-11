@@ -53,12 +53,10 @@ function RegistrationForm(props) {
         });
     }
     const handleMultipleSelectionChange = (e, selection) => {
-        console.log(selection.faculty);
         if (selection !== null) {
             state.faculty = selection.faculty;
             state.program = selection.program;
         }
-        console.log("**********")
     }
     const handlePageChange = () => {
         if (state.email.length && state.password.length) {

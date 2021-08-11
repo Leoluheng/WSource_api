@@ -3,7 +3,6 @@ import Comment from "./Comment";
 import CommentBox from "./CommentBox";
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
-import {red} from "@material-ui/core/colors";
 import {withStyles} from "@material-ui/core/styles";
 import axios from "axios";
 import {ACCESS_TOKEN_NAME, API_BASE_URL} from "../../constants/apiConstants";
@@ -105,9 +104,9 @@ class Comments extends Component {
         return isFetching ? "Loading..." :  (
             <Box>
                 <Divider />
-                <Typography className={this.props.classes.header} variant="h4">
+                {/* <Typography className={this.props.classes.header} variant="h4">
                     Comments
-                </Typography>
+                </Typography> */}
                 <Comment comments={comments} />
                 <CommentBox onCommentSubmit={this.onCommentSubmit} getComment={this.getComments}/>
             </Box>
