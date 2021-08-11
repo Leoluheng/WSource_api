@@ -50,7 +50,6 @@ function BetterHeader(props) {
         }
     )
     const toggleDrawer = (open) => (event) => {
-        console.log(open)
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return;
         }

@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import axios from 'axios';
+import {withRouter} from "react-router-dom";
 import './RegistrationForm.css';
 import {ACCESS_TOKEN_NAME, API_BASE_URL} from '../../constants/apiConstants';
-import {withRouter} from "react-router-dom";
+
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -103,11 +104,9 @@ function RegistrationForm(props) {
 
     }
     const redirectToHome = () => {
-        props.updateTitle('Home')
         props.history.push('/home');
     }
     const redirectToLogin = () => {
-        props.updateTitle('Login')
         props.history.push('/login');
     }
     const handleSubmitClick = (e) => {

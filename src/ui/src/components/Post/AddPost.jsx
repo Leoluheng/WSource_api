@@ -1,17 +1,22 @@
 import axios from 'axios';
 import React from 'react';
+import moment from "moment";
 import {Editor} from "@tinymce/tinymce-react";
+import {withRouter} from "react-router-dom";
+
 import {ACCESS_TOKEN_NAME, API_BASE_URL} from '../../constants/apiConstants';
+
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
-import {categories} from './categories'
 import Box from '@material-ui/core/Box';
-import {withRouter} from "react-router-dom";
 import {withStyles} from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+
+import {categories} from './categories'
 
 const styles = (theme) => ({
     box: {
@@ -19,6 +24,9 @@ const styles = (theme) => ({
         padding: 8,
         justifyContent: "space-around",
         alignItems: "center"
+    },
+    title: {
+        margin: theme.spacing(4, 0, 2),
     },
 })
 
@@ -56,21 +64,25 @@ class AddPost extends React.Component {
             content: '',
             categories: [],
             selectedCategory: '',
-            isModify: false
+            isModify: false,
+            resourceType: props.match.params.resourceType
         };
     }
 
     componentDidMount() {
         var self = this;
-        axios.get(API_BASE_URL + '/category/all', {}).then(function (response) {
-            const categories = response.data.map(category => {
-                return {value: category.type, label: category.type}
-            })
-            self.setState({categories})
-        })
-                .catch(function (error) {
-                console.log('error is ', error);
-            });
+        // Not needed for the demo, add back after
+        // axios.get(API_BASE_URL + '/category/all', {})
+        //     .then(function (response) {
+        //         const categories = response.data.map(category => {
+        //             return {value: category.type, label: category.type}
+        //         })
+        //         self.setState({categories})
+        //     })
+        //         .catch(function (error) {
+        //         console.log('error is ', error);
+        //         self.props.showError("Error occurs when fecthing all categories")
+        //     });
         if(this.props.match.params && this.props.match.params.postId){
             self.setState({isModify:true})
             const config = {
@@ -85,20 +97,23 @@ class AddPost extends React.Component {
             })
                 .catch(function (error) {
                     console.log('error is ', error);
+                    self.props.showError("Error occurs when fecthing post")
                 });
         }
     }
 
     addPost() {
         const self = this;
+        const date = new Date()
         const config = { headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)} };
         axios.post(API_BASE_URL + '/resource/add', {
             title: self.state.title,
             content: self.state.content,
-            // user: 'test_user',
             contentType: 'html',
-            resourceType: 'Offical',
+            resourceType: self.state.resourceType,
             category: self.state.selectedCategory,
+            createdAt:moment().format('MMMM Do YYYY, h:mm:ss a'),
+            updateAt:moment().format('MMMM Do YYYY, h:mm:ss a')
         }, config)
             .then(function (response) {
                 console.log('reponse from add post is ', response)
@@ -115,6 +130,7 @@ class AddPost extends React.Component {
 
     modifyPost() {
         const self = this;
+        const date = new Date()
         const config = {
             headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)},
             params:{
@@ -125,12 +141,13 @@ class AddPost extends React.Component {
             title: self.state.title,
             content: self.state.content,
             category: self.state.selectedCategory,
+            updateAt:moment().format('MMMM Do YYYY, h:mm:ss a')
         }, config)
             .then(function (response) {
                 console.log('Reponse from modify post is ', response)
                 if (response.status === 200) {
                     console.log("Success");
-                    self.redirectToShowPost()
+                    self.redirectToManagePost()
                 }
             })
             .catch(function (error) {
@@ -151,7 +168,7 @@ class AddPost extends React.Component {
     }
 
     redirectToShowPost(){
-        this.props.history.push("/official")
+        this.props.history.push(`/${this.state.resourceType}`)
     }
 
     redirectToManagePost(){
@@ -161,7 +178,17 @@ class AddPost extends React.Component {
     render() {
         return (
             <div className="col-md-9">
-                <br styles="clear:both"/>
+                <div className="form-group">
+                    <Typography variant="h6" align="center" className={this.props.classes.title}>
+                        {
+                            this.state.isModify ?
+                                `Modify post`
+                                : (this.state.resourceType ?
+                                    `Create Post under ${this.state.resourceType} Section`
+                                    :`Create Post`)
+                        }
+                    </Typography>
+                </div>
                 <div className="form-group">
                     <TextField id="title" name="title" label="Title" className="form-control"
                                variant="outlined" fullWidth required value={this.state.title}

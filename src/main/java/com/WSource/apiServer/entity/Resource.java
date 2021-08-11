@@ -3,7 +3,6 @@ package com.WSource.apiServer.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.*;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
@@ -11,6 +10,7 @@ import org.hibernate.search.annotations.Indexed;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.CascadeType;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -31,12 +31,16 @@ public class Resource {
 
     @Field
     @CreationTimestamp
-    @Column(name="created_at")
-    private Timestamp createdAt;
+    private Timestamp createdAtTimestamp;
 
     @Column
-    @UpdateTimestamp
-    private Timestamp updateAt;
+    private Timestamp updateAtTimestamp;
+
+    @Field
+    private String createdAt;
+
+    @Column
+    private String updateAt;
 
     @Field
     private String title;
@@ -66,7 +70,6 @@ public class Resource {
     @ColumnDefault("0")
     private Integer viewCount;
 
-    @OneToMany
-    @Cascade(CascadeType.REMOVE)
+    @OneToMany(cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
     private List<Comment> commentList;
 }

@@ -1,31 +1,33 @@
 import React from 'react';
 import axios from 'axios';
-
-import {API_BASE_URL} from '../../constants/apiConstants';
-
 import moment from 'moment';
 import parse from 'html-react-parser';
-import Pluralize from 'pluralize';
+import {withRouter} from "react-router-dom";
+
+import {ACCESS_TOKEN_NAME, API_BASE_URL} from '../../constants/apiConstants';
 
 import { withStyles } from '@material-ui/core/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import CardHeader from '@material-ui/core/CardHeader';
-import Avatar from '@material-ui/core/Avatar';
-import { red } from '@material-ui/core/colors';
 import Button from '@material-ui/core/Button';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+
 
 import Comments from "../Comments/Comments";
 import Vote from "../Vote/Vote";
-import {withRouter} from "react-router-dom";
+import PostHeader from "./PostHeader";
+import PostTitle from "./PostTitle";
+import {resourceMap} from "../../utils/resourceMap";
+import {categories} from "./categories";
+
 
 const styles = (theme) => ({
     layout: {
@@ -34,7 +36,7 @@ const styles = (theme) => ({
         marginRight: theme.spacing(4),
         marginTop:theme.spacing(4),
         [theme.breakpoints.up(1200 + theme.spacing(2) * 2)]: {
-            width: 1200,
+            width: 1400,
             marginLeft: 'auto',
             marginRight: 'auto',
         },
@@ -58,9 +60,6 @@ const styles = (theme) => ({
         marginLeft: theme.spacing(4),
         marginRight: theme.spacing(4),
         minHeight: '80vh'
-    },
-    avatar: {
-        backgroundColor: red[500],
     },
     toolbarSecondary: {
         justifyContent: 'space-between',
@@ -105,48 +104,73 @@ const styles = (theme) => ({
       }
 })
 
-const generateNameTag = (user) => {
-    if(user){
-        return `${user.name}-${user.faculty}-${user.program}-${user.year}`
-    }else{
-        return `Admin`
-    }
-}
-
 class ShowPost extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            posts: [],
+            allPosts: [],
+            displayPosts: [],
             curPost: null,
             searchQuery: "",
-            activeTabIndex: 0
+            activeTabIndex: 0,
+            resourceType: props.resourceType,
+            selectedCategory: ''
         };
         this.searchOnChange = this.searchOnChange.bind(this);
         this.getAllPost = this.getAllPost.bind(this);
         this.redirectToAddPost = this.redirectToAddPost.bind(this);
+        this.redirectToLogin = this.redirectToLogin.bind(this);
         this.updateCurrentPost = this.updateCurrentPost.bind(this);
         this.handleChangeTab = this.handleChangeTab.bind(this);
+        this.handleSelectCategory = this. handleSelectCategory.bind(this);
         this.updateViewCount = this.updateViewCount.bind(this);
+        this.search = this.search.bind(this);
+        this.applyFilter = this.applyFilter.bind(this);
     }
 
     componentDidMount() {
        this.getAllPost()
     }
 
+    applyFilter(){
+        var displayPosts = this.state.allPosts.filter( (post) =>
+            {
+                return post.resourceType === this.state.resourceType &&
+                    (this.state.selectedCategory === '' || this.state.selectedCategory === 'all' || post.category === this.state.selectedCategory)
+            }
+        );
+        if (this.state.activeTabIndex === 0){
+            // sort by timestamp
+            displayPosts.sort((x, y) => {
+                // console.log(moment(y.updateAt,'MMMM Do YYYY, h:mm:ss a').diff(moment(x.updateAt, 'MMMM Do YYYY, h:mm:ss a')))
+                console.log(moment(y.createdAt,'MMMM Do YYYY, h:mm:ss a'))
+                return moment(y.updateAt,'MMMM Do YYYY, h:mm:ss a').diff(moment(x.updateAt,'MMMM Do YYYY, h:mm:ss a'))
+            })
+        }else {
+            // sort by views and vote
+            displayPosts.sort((x, y) => {
+                return y.voteCount + y.viewCount - x.voteCount - x.viewCount
+            })
+        }
+        console.log(displayPosts)
+        this.setState({displayPosts:displayPosts})
+    }
 
     getAllPost(){
         var self = this;
         axios.get(API_BASE_URL + '/resource/all', {})
             .then(function (response) {
-                self.setState({posts: response.data})
+                self.setState({allPosts: response.data}, ()=> {self.applyFilter()})
+
             })
             .catch(function (error) {
                 console.log('error is ', error);
+                self.props.showError("Posts failed to load");
             });
     }
 
     search() {
+        var self = this;
         if(this.state.searchQuery !== ""){
             axios.get(API_BASE_URL + '/search/resource', {
                 params: {
@@ -154,12 +178,11 @@ class ShowPost extends React.Component {
                 }
             })
                 .then(function (response) {
-                    this.setState({posts: response.data}, ()=>{
-                        console.log("Calledd!!!")
-                    })
+                    self.setState({allPosts: response.data}, ()=> {self.applyFilter()})
                 })
                 .catch(function (error) {
                     console.log('error is ', error);
+                    self.props.showError("Search failed");
                 });
         }
     }
@@ -175,12 +198,11 @@ class ShowPost extends React.Component {
                 }
             })
                 .then(function (response) {
-                    self.setState({posts: response.data}, ()=>{
-                        console.log("Calledd!!!")
-                    })
+                    self.setState({allPosts: response.data}, ()=> {self.applyFilter()})
                 })
                 .catch(function (error) {
                     console.log('error is ', error);
+                    self.props.showError("Search failed");
                 });
         }
         // else{
@@ -189,8 +211,25 @@ class ShowPost extends React.Component {
     }
 
     redirectToAddPost(){
-        this.props.history.push("/AddPost")
+        var self = this
+        axios.get(API_BASE_URL + '/user/me', {headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)}})
+            .then(function (response) {
+                console.log(response)
+                if (response.status !== 200 && response.status !== 202) {
+                    self.redirectToLogin()
+                }
+            })
+            .catch(function (error) {
+                self.redirectToLogin()
+            });
+
+        this.props.history.push(`/AddPost/${this.state.resourceType}`)
     }
+
+    redirectToLogin() {
+        this.props.history.push('/login');
+    }
+
 
     updateCurrentPost(curPost){
         this.setState({curPost: curPost })
@@ -215,10 +254,13 @@ class ShowPost extends React.Component {
     }
 
     handleChangeTab(event, value){
-        this.setState({ activeTabIndex: value });
+        this.setState({ activeTabIndex: value },()=> {this.applyFilter()});
     }
 
-    
+    handleSelectCategory(e){
+        this.setState({selectedCategory: e.target.value},()=> {this.applyFilter()})
+    }
+
     renderPostList(){
         const { activeTabIndex } = this.state;
         var self = this
@@ -227,7 +269,7 @@ class ShowPost extends React.Component {
                 <Grid container xs={12} className={self.props.classes.root}>
                     <Grid item xs={9} sm={9} md={9}>
                         <Autocomplete
-                            options={self.state.posts}
+                            options={self.state.allPosts}
                             className={self.props.classes.searchBox}
                             freeSolo
                             selectOnFocus
@@ -251,9 +293,32 @@ class ShowPost extends React.Component {
                         </Button>
                     </Grid>
                     <Grid container xs={12} className={self.props.classes.title}>
-                        <Typography gutterBottom variant="h5" component="h5">
-                                University Resources
-                        </Typography>
+                        <Grid item xs={6}>
+                            <Typography gutterBottom variant="h5" component="h5">
+                                {resourceMap[this.state.resourceType]}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <FormControl variant="outlined" fullWidth >
+                                <InputLabel id="select-category-label">Category</InputLabel>
+                                <Select
+                                    labelId="select-category-label"
+                                    id="select-category"
+                                    value={this.state.selectedCategory}
+                                    onChange={this.handleSelectCategory}
+                                    label="Category"
+                                >
+                                    <MenuItem value={"all"}>ALL</MenuItem>
+                                    {
+                                        categories.map((category, index) => {
+                                            return (
+                                                <MenuItem value={category}>{category}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>
+                        </Grid>
                     </Grid>
                     <Grid container xs={12}>
                         <Grid item xs={10}>
@@ -270,10 +335,8 @@ class ShowPost extends React.Component {
                     </Grid>
                 </Grid>
                 
-                <Grid container component={Paper} elevation={0} style={{minHeight: 800, maxHeight: 800, overflow: 'auto'}} > 
-                    
-                        
-                    { this.state.posts.length?
+                <Grid container component={Paper} elevation={0} style={{minHeight: 800, maxHeight: 800, overflow: 'auto'}} >
+                    { this.state.displayPosts.length?
                         (
                             <Grid container xs={12} className={this.props.classes.list}>
                                 { 
@@ -283,7 +346,7 @@ class ShowPost extends React.Component {
                                         </Typography>)
                                 }
                                 {
-                                    this.state.posts.map((post, index) => {
+                                    this.state.displayPosts.map((post, index) => {
                                         return <PostTitle value={post} onClick={self.updateCurrentPost} classes={this.props.classes}/>
                                     })
                                 }
@@ -303,7 +366,7 @@ class ShowPost extends React.Component {
     }
 
     renderContent(){
-        if (this.state.posts.length === 0){
+        if (this.state.displayPosts.length === 0){
             // Empty content
             return (
                 <Grid 
@@ -321,24 +384,14 @@ class ShowPost extends React.Component {
             )
         }else {
             if(!this.state.curPost){
-                this.state.curPost = this.state.posts[0]
+                this.state.curPost = this.state.displayPosts[0]
             }
             const curPost = this.state.curPost
-            const date = Date(curPost.createdAt)
-            console.log(curPost)
             return (
                     <Grid container xs component={Paper} elevation={3} style={{minHeight: 1050, maxHeight: 1050, overflow: 'auto'}} className={this.props.classes.post}>
                         <Grid container xs={12}>
                             <Grid item xs={9} sm={9} md={9}>
-                                <CardHeader
-                                    avatar={
-                                        <Avatar aria-label="recipe" className={this.props.classes.avatar}>
-                                            R
-                                        </Avatar>
-                                    }
-                                    title="Andy - 4A Student"
-                                    subheader={moment(date).format('MMMM Do YYYY') + " - " + Pluralize("view", curPost.viewCount, true)}
-                                />
+                                <PostHeader post={curPost}/>
                             </Grid>
                             <Grid item xs={3} sm={3} md={3}>
                                 <Vote vote={curPost.voteCount} postId={curPost.id} />
@@ -358,7 +411,7 @@ class ShowPost extends React.Component {
                                 }
                             </Grid>
                             <Grid item xs={12} className={this.props.classes.title}>
-                                <Comments postId={curPost.id}/>
+                                <Comments postId={curPost.id} showError={this.props.showError}/>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -371,14 +424,14 @@ class ShowPost extends React.Component {
         return (
             <div>
                 <Grid container spacing={2} className={classes.layout}>
-                    <Grid item xs={5} sm={5} md={5}>
+                    <Grid item xs={4} sm={4} md={4}>
                         {/* <Paper className="post-list" elevation={5}> */}
                             {
                                 this.renderPostList()
                             }
                         {/* </Paper> */}
                     </Grid>
-                    <Grid item xs={7} sm={7} md={7}>
+                    <Grid item xs={8} sm={8} md={8}>
                         {/* <Paper className="content" elevation={5} > */}
                             {
                                 this.renderContent()
@@ -391,42 +444,5 @@ class ShowPost extends React.Component {
     }
 }
 
-class PostTitle extends React.Component {
-    handleClick = () => {
-        this.props.onClick(this.props.value);
-    }
-
-    render() {
-        const post = this.props.value
-        const date = Date(post.createdAt)
-        console.log(date)
-        return (
-            <Card>
-                <CardActionArea onClick={this.handleClick}>
-                    <CardContent>
-                        <CardHeader
-                            avatar={
-                                <Avatar aria-label="recipe" className={this.props.classes.avatar}>
-                                    R
-                                </Avatar>
-                            }
-                            title={generateNameTag(post.user)}
-                            subheader={moment(date).format('MMMM Do YYYY') + " - " + Pluralize("view", post.viewCount, true)}
-                        />
-                        <Typography gutterBottom variant="h5" component="h2">
-                            {post.title}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            { post.category ?
-                                `Category: ${post.category}`:
-                                ""
-                            }
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
-        );
-    }
-}
 
 export default withRouter(withStyles(styles, { withTheme: true })(ShowPost));

@@ -89,6 +89,7 @@ class ManagePost extends React.Component {
             })
             .catch(function (error) {
                 console.log('error is ', error)
+                self.props.showError("Post failed to delete");
             });
     };
 
@@ -104,8 +105,8 @@ class ManagePost extends React.Component {
                             <div className={this.props.classes.list}>
                                 <List>
                                     {this.state.posts.map((post, index) => {
-                                        const createdDate = moment(Date(post.createdAt)).format('MMMM Do YYYY')
-                                        const modifiedDate = moment(Date(post.updateAt)).format('MMMM Do YYYY')
+                                        const createdDate = moment(post.createdAt, 'MMMM Do YYYY, h:mm a').format('MMMM Do YYYY, h:mm a')
+                                        const modifiedDate = moment(post.updateAt, 'MMMM Do YYYY, h:mm a').format('MMMM Do YYYY, h:mm a')
                                         const viewCount = Pluralize("view", post.viewCount, true)
                                         const voteCount = post.voteCount
                                         return (
