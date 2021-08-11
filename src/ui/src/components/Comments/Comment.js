@@ -10,6 +10,7 @@ import {
     Typography
 } from "@material-ui/core";
 import Faker from "faker";
+import NameTag from "../Utils/NameTag";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -38,23 +39,11 @@ const Comment = ({ comments }) => {
                             </ListItemAvatar>
                             <ListItemText
                                 primary={
-                                    <Typography className={classes.fonts}>
-                                        {/*{comment.name}*/}
-                                        Andy
-                                    </Typography>
+                                    <NameTag user={comment.user}/>
                                 }
                                 secondary={
                                     <>
-                                        <Typography
-                                            component="span"
-                                            variant="body2"
-                                            className={classes.inline}
-                                            color="textPrimary"
-                                        >
-                                            {/*{comment.email}*/}
-                                            2B Student
-                                        </Typography>
-                                        {` - ${comment.review}`}
+                                        {`${comment.review}`}
                                     </>
                                 }
                             />

@@ -11,9 +11,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -26,6 +23,9 @@ import Tab from '@material-ui/core/Tab';
 import Comments from "../Comments/Comments";
 import Vote from "../Vote/Vote";
 import {withRouter} from "react-router-dom";
+import {resourceMap} from "../../utils/resourceMap";
+import PostTitle from "./PostTitle";
+import NameTag from "../Utils/NameTag";
 
 const styles = (theme) => ({
     layout: {
@@ -107,11 +107,12 @@ const styles = (theme) => ({
 
 const generateNameTag = (user) => {
     if(user){
-        return `${user.name}-${user.faculty}-${user.program}-${user.year}`
+        return `${user.name}  ${user.faculty}-${user.program}-${user.year}`
     }else{
         return `Admin`
     }
 }
+
 
 class ShowPost extends React.Component {
     constructor(props) {
@@ -120,7 +121,8 @@ class ShowPost extends React.Component {
             posts: [],
             curPost: null,
             searchQuery: "",
-            activeTabIndex: 0
+            activeTabIndex: 0,
+            resourceType: props.resourceType
         };
         this.searchOnChange = this.searchOnChange.bind(this);
         this.getAllPost = this.getAllPost.bind(this);
@@ -128,12 +130,12 @@ class ShowPost extends React.Component {
         this.updateCurrentPost = this.updateCurrentPost.bind(this);
         this.handleChangeTab = this.handleChangeTab.bind(this);
         this.updateViewCount = this.updateViewCount.bind(this);
+        this.search = this.search.bind(this);
     }
 
     componentDidMount() {
        this.getAllPost()
     }
-
 
     getAllPost(){
         var self = this;
@@ -189,7 +191,7 @@ class ShowPost extends React.Component {
     }
 
     redirectToAddPost(){
-        this.props.history.push("/AddPost")
+        this.props.history.push(`/AddPost/${this.state.resourceType}`)
     }
 
     updateCurrentPost(curPost){
@@ -252,7 +254,7 @@ class ShowPost extends React.Component {
                     </Grid>
                     <Grid container xs={12} className={self.props.classes.title}>
                         <Typography gutterBottom variant="h5" component="h5">
-                                University Resources
+                            {resourceMap[this.state.resourceType]}
                         </Typography>
                     </Grid>
                     <Grid container xs={12}>
@@ -336,7 +338,9 @@ class ShowPost extends React.Component {
                                             R
                                         </Avatar>
                                     }
-                                    title="Andy - 4A Student"
+                                    title={
+                                        <NameTag user={curPost.user}/>
+                                    }
                                     subheader={moment(date).format('MMMM Do YYYY') + " - " + Pluralize("view", curPost.viewCount, true)}
                                 />
                             </Grid>
@@ -391,42 +395,5 @@ class ShowPost extends React.Component {
     }
 }
 
-class PostTitle extends React.Component {
-    handleClick = () => {
-        this.props.onClick(this.props.value);
-    }
-
-    render() {
-        const post = this.props.value
-        const date = Date(post.createdAt)
-        console.log(date)
-        return (
-            <Card>
-                <CardActionArea onClick={this.handleClick}>
-                    <CardContent>
-                        <CardHeader
-                            avatar={
-                                <Avatar aria-label="recipe" className={this.props.classes.avatar}>
-                                    R
-                                </Avatar>
-                            }
-                            title={generateNameTag(post.user)}
-                            subheader={moment(date).format('MMMM Do YYYY') + " - " + Pluralize("view", post.viewCount, true)}
-                        />
-                        <Typography gutterBottom variant="h5" component="h2">
-                            {post.title}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            { post.category ?
-                                `Category: ${post.category}`:
-                                ""
-                            }
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
-        );
-    }
-}
 
 export default withRouter(withStyles(styles, { withTheme: true })(ShowPost));

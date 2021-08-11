@@ -12,6 +12,8 @@ import {categories} from './categories'
 import Box from '@material-ui/core/Box';
 import {withRouter} from "react-router-dom";
 import {withStyles} from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
 
 const styles = (theme) => ({
     box: {
@@ -19,6 +21,9 @@ const styles = (theme) => ({
         padding: 8,
         justifyContent: "space-around",
         alignItems: "center"
+    },
+    title: {
+        margin: theme.spacing(4, 0, 2),
     },
 })
 
@@ -56,7 +61,8 @@ class AddPost extends React.Component {
             content: '',
             categories: [],
             selectedCategory: '',
-            isModify: false
+            isModify: false,
+            resourceType: props.match.params.resourceType
         };
     }
 
@@ -95,9 +101,8 @@ class AddPost extends React.Component {
         axios.post(API_BASE_URL + '/resource/add', {
             title: self.state.title,
             content: self.state.content,
-            // user: 'test_user',
             contentType: 'html',
-            resourceType: 'Offical',
+            resourceType: self.state.resourceType,
             category: self.state.selectedCategory,
         }, config)
             .then(function (response) {
@@ -161,7 +166,17 @@ class AddPost extends React.Component {
     render() {
         return (
             <div className="col-md-9">
-                <br styles="clear:both"/>
+                <div className="form-group">
+                    <Typography variant="h6" align="center" className={this.props.classes.title}>
+                        {
+                            this.state.isModify ?
+                                `Modify post`
+                                : (this.state.resourceType ?
+                                    `Create Post under ${this.state.resourceType} Section`
+                                    :`Create Post`)
+                        }
+                    </Typography>
+                </div>
                 <div className="form-group">
                     <TextField id="title" name="title" label="Title" className="form-control"
                                variant="outlined" fullWidth required value={this.state.title}

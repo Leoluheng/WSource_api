@@ -32,7 +32,7 @@ function App() {
                             <PrivateRoute path="/home">
                                 <Home/>
                             </PrivateRoute>
-                            <Route component={AddPost} path="/addPost"></Route>
+                            <Route component={AddPost} path="/addPost/:resourceType"></Route>
                             <Route component={AddPost} path="/updatePost/:postId"></Route>
                         </Switch>
                         <AlertComponent errorMessage={errorMessage} hideError={updateErrorMessage}/>
@@ -41,13 +41,13 @@ function App() {
                         <PublicHome/>
                     </Route>
                     <Route path="/community">
-                        <ShowPost/>
+                        <ShowPost resourceType={"Community"}/>
                     </Route>
                     <Route path="/official">
-                        <ShowPost/>
+                        <ShowPost resourceType={"Official"}/>
                     </Route>
                     <Route path="/service">
-                        <ShowPost/>
+                        <ShowPost resourceType={"Service"}/>
                     </Route>
                     <Route path="/managePost">
                         <ManagePost/>
