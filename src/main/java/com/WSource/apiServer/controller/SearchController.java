@@ -25,4 +25,11 @@ public class SearchController {
         return searchService.getPostBasedOnWord(word);
     }
 
+    @GetMapping("/resourceFuzzy")
+    public List<Resource> getPostByWordFuzzy(@RequestParam String word){
+//        return searchService.getPostBasedOnWord(word)
+//                .stream().map(resourceMapper::toResponse).collect(Collectors.toList());
+        return searchService.getPostBasedOnWordFuzzy(word);
+    }
+
 }

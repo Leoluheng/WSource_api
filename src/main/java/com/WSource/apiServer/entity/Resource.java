@@ -2,10 +2,13 @@ package com.WSource.apiServer.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.core.StopFilterFactory;
+import org.apache.lucene.analysis.standard.StandardFilterFactory;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -21,6 +24,13 @@ import java.util.List;
 @Entity
 @Table(name="resources")
 @Indexed(index = "idx_resource")
+@AnalyzerDef(name = "ResourceTextAnalyzer",
+        tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+        filters = {
+                @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+                @TokenFilterDef(factory = StandardFilterFactory.class),
+                @TokenFilterDef(factory = StopFilterFactory.class)
+        })
 public class Resource {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -42,10 +52,10 @@ public class Resource {
     @Column
     private String updateAt;
 
-    @Field
+    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO, analyzer=@Analyzer(definition = "ResourceTextAnalyzer"))
     private String title;
 
-    @Field
+    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO, analyzer=@Analyzer(definition = "ResourceTextAnalyzer"))
     @Lob
     @Column(length=1000000)
     private String content;

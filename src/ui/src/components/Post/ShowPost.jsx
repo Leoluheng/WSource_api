@@ -19,7 +19,8 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-
+import ClearIcon from '@material-ui/icons/Clear';
+import IconButton from '@material-ui/core/IconButton';
 
 import Comments from "../Comments/Comments";
 import Vote from "../Vote/Vote";
@@ -27,6 +28,7 @@ import PostHeader from "./PostHeader";
 import PostTitle from "./PostTitle";
 import {resourceMap} from "../../utils/resourceMap";
 import {categories} from "./categories";
+import EditIcon from "@material-ui/icons/Edit";
 
 
 const styles = (theme) => ({
@@ -110,6 +112,8 @@ class ShowPost extends React.Component {
         this.state = {
             allPosts: [],
             displayPosts: [],
+            searchSuggestions: [],
+            displaySearchQuery: false,
             curPost: null,
             searchQuery: "",
             activeTabIndex: 0,
@@ -122,14 +126,16 @@ class ShowPost extends React.Component {
         this.redirectToLogin = this.redirectToLogin.bind(this);
         this.updateCurrentPost = this.updateCurrentPost.bind(this);
         this.handleChangeTab = this.handleChangeTab.bind(this);
-        this.handleSelectCategory = this. handleSelectCategory.bind(this);
+        this.handleSelectCategory = this.handleSelectCategory.bind(this);
+        this.handleCancelSearch = this.handleCancelSearch.bind(this);
         this.updateViewCount = this.updateViewCount.bind(this);
         this.search = this.search.bind(this);
         this.applyFilter = this.applyFilter.bind(this);
+        this.applySearchFilter = this.applySearchFilter.bind(this);
     }
 
     componentDidMount() {
-       this.getAllPost()
+        this.getAllPost()
     }
 
     applyFilter(){
@@ -156,6 +162,30 @@ class ShowPost extends React.Component {
         this.setState({displayPosts:displayPosts})
     }
 
+    // Same filter but apply to search suggestion
+    applySearchFilter(){
+        var searchSuggestions = this.state.searchSuggestions.filter( (post) =>
+            {
+                return post.resourceType === this.state.resourceType &&
+                    (this.state.selectedCategory === '' || this.state.selectedCategory === 'all' || post.category === this.state.selectedCategory)
+            }
+        );
+        if (this.state.activeTabIndex === 0){
+            // sort by timestamp
+            searchSuggestions.sort((x, y) => {
+                // console.log(moment(y.updateAt,'MMMM Do YYYY, h:mm:ss a').diff(moment(x.updateAt, 'MMMM Do YYYY, h:mm:ss a')))
+                console.log(moment(y.createdAt,'MMMM Do YYYY, h:mm:ss a'))
+                return moment(y.updateAt,'MMMM Do YYYY, h:mm:ss a').diff(moment(x.updateAt,'MMMM Do YYYY, h:mm:ss a'))
+            })
+        }else {
+            // sort by views and vote
+            searchSuggestions.sort((x, y) => {
+                return y.voteCount + y.viewCount - x.voteCount - x.viewCount
+            })
+        }
+        this.setState({searchSuggestions:searchSuggestions})
+    }
+
     getAllPost(){
         var self = this;
         axios.get(API_BASE_URL + '/resource/all', {})
@@ -171,14 +201,14 @@ class ShowPost extends React.Component {
 
     search() {
         var self = this;
-        if(this.state.searchQuery !== ""){
-            axios.get(API_BASE_URL + '/search/resource', {
+        if(this.state.searchQuery !== "" && this.state.searchQuery.length > 3){
+            axios.get(API_BASE_URL + '/search/resourceFuzzy', {
                 params: {
                     word: this.state.searchQuery
                 }
             })
                 .then(function (response) {
-                    self.setState({allPosts: response.data}, ()=> {self.applyFilter()})
+                    self.setState({allPosts: response.data, displaySearchQuery: true}, ()=> {self.applyFilter()})
                 })
                 .catch(function (error) {
                     console.log('error is ', error);
@@ -188,26 +218,25 @@ class ShowPost extends React.Component {
     }
 
     searchOnChange(event, value){
-        console.log(value)
         var self = this;
         this.setState({searchQuery: value})
-        if(value !== ""){
-            axios.get(API_BASE_URL + '/search/resource', {
+        if(value !== "" && value.length > 3){
+            axios.get(API_BASE_URL + '/search/resourceFuzzy', {
                 params: {
                     word: value
                 }
             })
                 .then(function (response) {
-                    self.setState({allPosts: response.data}, ()=> {self.applyFilter()})
+                    self.setState({searchSuggestions: response.data}, ()=> {self.applyFilter()})
                 })
                 .catch(function (error) {
                     console.log('error is ', error);
                     self.props.showError("Search failed");
                 });
         }
-        // else{
-        //     this.getAllPost()
-        // }
+        else{
+            this.getAllPost()
+        }
     }
 
     redirectToAddPost(){
@@ -264,6 +293,11 @@ class ShowPost extends React.Component {
         this.setState({selectedCategory: e.target.value},()=> {this.applyFilter()})
     }
 
+    handleCancelSearch(){
+        this.setState({searchSuggestions: [], searchQuery: '', displaySearchQuery: false} )
+        this.getAllPost();
+    }
+
     renderPostList(){
         const { activeTabIndex } = this.state;
         var self = this
@@ -272,7 +306,7 @@ class ShowPost extends React.Component {
                 <Grid container xs={12} className={self.props.classes.root}>
                     <Grid item xs={9} sm={9} md={9}>
                         <Autocomplete
-                            options={self.state.allPosts}
+                            options={self.state.searchSuggestions}
                             className={self.props.classes.searchBox}
                             freeSolo
                             selectOnFocus
@@ -343,10 +377,21 @@ class ShowPost extends React.Component {
                         (
                             <Grid container xs={12} className={this.props.classes.list}>
                                 { 
-                                    this.state.searchQuery && this.state.searchQuery !== "" && 
-                                    (<Typography variant="subtitle1" component="subtitle1" color='textSecondary' className={this.props.classes.content}>
-                                            Search result for "{this.state.searchQuery}"
-                                        </Typography>)
+                                    this.state.searchQuery && this.state.searchQuery !== "" && this.state.displaySearchQuery &&
+                                    (
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            flexWrap: 'wrap',
+                                        }}>
+                                            <Typography variant="subtitle1" component="subtitle1" color='textSecondary' className={this.props.classes.content}>
+                                                Search result for "{this.state.searchQuery}"
+                                            </Typography>
+                                            <IconButton edge="end" aria-label="edit" onClick={this.handleCancelSearch}>
+                                                 <ClearIcon />
+                                            </IconButton>
+                                        </div>
+                                    )
                                 }
                                 {
                                     this.state.displayPosts.map((post, index) => {
