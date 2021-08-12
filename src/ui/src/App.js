@@ -40,21 +40,24 @@ function App() {
                         </Switch>
                         <AlertComponent errorMessage={errorMessage} hideError={updateErrorMessage}/>
                     </div>
-                    <Route path="/" exact={true}>
-                        <PublicHome />
-                    </Route>
-                    <Route path="/Community">
-                        <ShowPost resourceType={"Community"} showError={updateErrorMessage}/>
-                    </Route>
-                    <Route path="/Official">
-                        <ShowPost resourceType={"Official"} showError={updateErrorMessage}/>
-                    </Route>
-                    <Route path="/Service">
-                        <ShowPost resourceType={"Service"} showError={updateErrorMessage}/>
-                    </Route>
-                    <Route path="/managePost" >
-                        <ManagePost showError={updateErrorMessage}/>
-                    </Route>
+                        <Route path="/" exact={true}>
+                            <PublicHome />
+                        </Route>
+                        <Route path="/Community">
+                            <ShowPost resourceType={"Community"} showError={updateErrorMessage}/>
+                        </Route>
+                        <Route path="/Official" exact={true}>
+                            <ShowPost resourceType={"Official"} showError={updateErrorMessage}/>
+                        </Route>
+                        <Route path="/Official/:category">
+                            <ShowPost resourceType={"Official"} showError={updateErrorMessage}/>
+                        </Route>
+                        <Route path="/Service">
+                            <ShowPost resourceType={"Service"} showError={updateErrorMessage}/>
+                        </Route>
+                        <Route path="/managePost" >
+                            <ManagePost showError={updateErrorMessage}/>
+                        </Route>
                 </div>
             </Router>
         </CookiesProvider>

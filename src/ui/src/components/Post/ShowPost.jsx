@@ -114,7 +114,7 @@ class ShowPost extends React.Component {
             searchQuery: "",
             activeTabIndex: 0,
             resourceType: props.resourceType,
-            selectedCategory: ''
+            selectedCategory: props.match.params && props.match.params.category?props.match.params.category:''
         };
         this.searchOnChange = this.searchOnChange.bind(this);
         this.getAllPost = this.getAllPost.bind(this);
@@ -215,7 +215,7 @@ class ShowPost extends React.Component {
         axios.get(API_BASE_URL + '/user/me', {headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)}})
             .then(function (response) {
                 console.log(response)
-                if (response.status !== 200 && response.status !== 202) {
+                if ( response.status !== 202) {
                     self.redirectToLogin()
                 }
             })
@@ -227,6 +227,9 @@ class ShowPost extends React.Component {
     }
 
     redirectToLogin() {
+        if (localStorage.getItem(ACCESS_TOKEN_NAME)) {
+            localStorage.removeItem(ACCESS_TOKEN_NAME)
+        }
         this.props.history.push('/login');
     }
 
@@ -443,6 +446,5 @@ class ShowPost extends React.Component {
         )
     }
 }
-
 
 export default withRouter(withStyles(styles, { withTheme: true })(ShowPost));

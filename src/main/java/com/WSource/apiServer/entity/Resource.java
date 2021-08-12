@@ -69,7 +69,7 @@ public class Resource {
 
     @ColumnDefault("0")
     private Integer viewCount;
-
-    @OneToMany(cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
-    private List<Comment> commentList;
+//
+//    @OneToMany(cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
+//    private List<Comment> commentList;
 }

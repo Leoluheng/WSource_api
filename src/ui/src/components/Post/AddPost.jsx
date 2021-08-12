@@ -104,8 +104,19 @@ class AddPost extends React.Component {
 
     addPost() {
         const self = this;
-        const date = new Date()
         const config = { headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)} };
+        if(!self.state.title){
+            self.props.showError("Title can not be empty")
+            return;
+        }
+        if(!self.state.content){
+            self.props.showError("Content can not be empty")
+            return;
+        }
+        if(!self.state.selectedCategory){
+            self.props.showError("Category need to be selected")
+            return;
+        }
         axios.post(API_BASE_URL + '/resource/add', {
             title: self.state.title,
             content: self.state.content,
@@ -130,7 +141,18 @@ class AddPost extends React.Component {
 
     modifyPost() {
         const self = this;
-        const date = new Date()
+        if(!self.state.title){
+            self.props.showError("Title can not be empty")
+            return;
+        }
+        if(!self.state.content){
+            self.props.showError("Content can not be empty")
+            return;
+        }
+        if(!self.state.selectedCategory){
+            self.props.showError("Category need to be selected")
+            return;
+        }
         const config = {
             headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)},
             params:{
