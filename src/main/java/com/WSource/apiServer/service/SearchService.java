@@ -38,7 +38,7 @@ public class SearchService {
                 .forEntity(Resource.class)
                 .get();
         Query foodQuery = qb.keyword().fuzzy()
-                .withEditDistanceUpTo(2).onFields("content","title").matching(word).createQuery();
+                .withEditDistanceUpTo(1).onFields("content","title").matching(word).createQuery();
         FullTextQuery fullTextQuery = fullTextEntityManager.createFullTextQuery(foodQuery, Resource.class);
         return (List<Resource>) fullTextQuery.getResultList();
     }

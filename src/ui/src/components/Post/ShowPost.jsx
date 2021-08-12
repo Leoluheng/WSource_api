@@ -28,7 +28,6 @@ import PostHeader from "./PostHeader";
 import PostTitle from "./PostTitle";
 import {resourceMap} from "../../utils/resourceMap";
 import {categories} from "./categories";
-import EditIcon from "@material-ui/icons/Edit";
 
 
 const styles = (theme) => ({
@@ -113,7 +112,7 @@ class ShowPost extends React.Component {
             allPosts: [],
             displayPosts: [],
             searchSuggestions: [],
-            displaySearchQuery: false,
+            displaySearchQuery: "",
             curPost: null,
             searchQuery: "",
             activeTabIndex: 0,
@@ -128,6 +127,7 @@ class ShowPost extends React.Component {
         this.handleChangeTab = this.handleChangeTab.bind(this);
         this.handleSelectCategory = this.handleSelectCategory.bind(this);
         this.handleCancelSearch = this.handleCancelSearch.bind(this);
+        this.handleSelectSearch = this.handleSelectSearch.bind(this);
         this.updateViewCount = this.updateViewCount.bind(this);
         this.search = this.search.bind(this);
         this.applyFilter = this.applyFilter.bind(this);
@@ -139,6 +139,7 @@ class ShowPost extends React.Component {
     }
 
     applyFilter(){
+        console.log("Apply display filter")
         var displayPosts = this.state.allPosts.filter( (post) =>
             {
                 return post.resourceType === this.state.resourceType &&
@@ -149,7 +150,6 @@ class ShowPost extends React.Component {
             // sort by timestamp
             displayPosts.sort((x, y) => {
                 // console.log(moment(y.updateAt,'MMMM Do YYYY, h:mm:ss a').diff(moment(x.updateAt, 'MMMM Do YYYY, h:mm:ss a')))
-                console.log(moment(y.createdAt,'MMMM Do YYYY, h:mm:ss a'))
                 return moment(y.updateAt,'MMMM Do YYYY, h:mm:ss a').diff(moment(x.updateAt,'MMMM Do YYYY, h:mm:ss a'))
             })
         }else {
@@ -158,23 +158,23 @@ class ShowPost extends React.Component {
                 return y.voteCount + y.viewCount - x.voteCount - x.viewCount
             })
         }
-        console.log(displayPosts)
         this.setState({displayPosts:displayPosts})
     }
 
     // Same filter but apply to search suggestion
     applySearchFilter(){
+        console.log("Apply search filter")
         var searchSuggestions = this.state.searchSuggestions.filter( (post) =>
             {
                 return post.resourceType === this.state.resourceType &&
                     (this.state.selectedCategory === '' || this.state.selectedCategory === 'all' || post.category === this.state.selectedCategory)
             }
         );
+        console.log(searchSuggestions)
         if (this.state.activeTabIndex === 0){
             // sort by timestamp
             searchSuggestions.sort((x, y) => {
                 // console.log(moment(y.updateAt,'MMMM Do YYYY, h:mm:ss a').diff(moment(x.updateAt, 'MMMM Do YYYY, h:mm:ss a')))
-                console.log(moment(y.createdAt,'MMMM Do YYYY, h:mm:ss a'))
                 return moment(y.updateAt,'MMMM Do YYYY, h:mm:ss a').diff(moment(x.updateAt,'MMMM Do YYYY, h:mm:ss a'))
             })
         }else {
@@ -195,7 +195,7 @@ class ShowPost extends React.Component {
             })
             .catch(function (error) {
                 console.log('error is ', error);
-                self.props.showError("Posts failed to load");
+                self.props.showError("Posts failed to load.");
             });
     }
 
@@ -208,12 +208,14 @@ class ShowPost extends React.Component {
                 }
             })
                 .then(function (response) {
-                    self.setState({allPosts: response.data, displaySearchQuery: true}, ()=> {self.applyFilter()})
+                    self.setState({allPosts: response.data, displaySearchQuery: self.state.searchQuery}, ()=> {self.applyFilter()})
                 })
                 .catch(function (error) {
                     console.log('error is ', error);
-                    self.props.showError("Search failed");
+                    self.props.showError("Search failed.");
                 });
+        }else{
+            self.props.showError("Search query is empty or too short.");
         }
     }
 
@@ -227,15 +229,12 @@ class ShowPost extends React.Component {
                 }
             })
                 .then(function (response) {
-                    self.setState({searchSuggestions: response.data}, ()=> {self.applyFilter()})
+                    self.setState({searchSuggestions: response.data}, ()=> {self.applySearchFilter()})
                 })
                 .catch(function (error) {
                     console.log('error is ', error);
                     self.props.showError("Search failed");
                 });
-        }
-        else{
-            this.getAllPost()
         }
     }
 
@@ -243,7 +242,6 @@ class ShowPost extends React.Component {
         var self = this
         axios.get(API_BASE_URL + '/user/me', {headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)}})
             .then(function (response) {
-                console.log(response)
                 if ( response.status !== 202) {
                     self.redirectToLogin()
                 }
@@ -294,8 +292,18 @@ class ShowPost extends React.Component {
     }
 
     handleCancelSearch(){
-        this.setState({searchSuggestions: [], searchQuery: '', displaySearchQuery: false} )
+        this.setState({searchSuggestions: [], searchQuery: '', displaySearchQuery: ''} )
         this.getAllPost();
+    }
+
+    handleSelectSearch(event, value){
+        console.log(value)
+        if (typeof value === "unefined" || value === null) {
+            return;
+        }
+        this.setState({searchQuery: value.title}, ()=>{
+            this.search()
+        })
     }
 
     renderPostList(){
@@ -311,10 +319,25 @@ class ShowPost extends React.Component {
                             freeSolo
                             selectOnFocus
                             inputValue={self.state.searchQuery}
+                            /*onInputChang is called when typing a new letter*/
                             onInputChange={this.searchOnChange}
-                            getOptionLabel={(option)=> option.title}
+                            /*onChange is called when an option is selected */
+                            // When I add onChange, pressing enter breaks the website
+                            // couldn't get it to work, similar issue here: https://github.com/mui-org/material-ui/issues/18123
+                            // onChange={this.handleSelectSearch}
+                            getOptionLabel={(option)=> option.title ? option.title : '' }
                             renderInput={(params) => (
-                                <TextField {...params} label="Search Posts..." variant="outlined" />
+                                <TextField {...params} label="Search Posts..." variant="outlined"
+                                    // Try to get enter key to work without pressing on the search button
+                                           onKeyDown={e => {
+                                    if (e.keyCode === 13 && e.target.value) {
+                                        // setAutoCompleteValue(autoCompleteValue.concat(e.target.value));
+                                        console.log(e.target.value)
+
+                                        // self.setState({searchQuery: e.target.value, displaySearchQuery: e.target.value})
+                                        self.search()
+                                    }}}
+                                />
                                 )}
                         />
                     </Grid>
@@ -376,8 +399,8 @@ class ShowPost extends React.Component {
                     { this.state.displayPosts.length?
                         (
                             <Grid container xs={12} className={this.props.classes.list}>
-                                { 
-                                    this.state.searchQuery && this.state.searchQuery !== "" && this.state.displaySearchQuery &&
+                                {
+                                    this.state.displaySearchQuery && this.state.displaySearchQuery!== "" &&
                                     (
                                         <div style={{
                                             display: 'flex',
@@ -385,7 +408,7 @@ class ShowPost extends React.Component {
                                             flexWrap: 'wrap',
                                         }}>
                                             <Typography variant="subtitle1" component="subtitle1" color='textSecondary' className={this.props.classes.content}>
-                                                Search result for "{this.state.searchQuery}"
+                                                Search result for "{this.state.displaySearchQuery}"
                                             </Typography>
                                             <IconButton edge="end" aria-label="edit" onClick={this.handleCancelSearch}>
                                                  <ClearIcon />
