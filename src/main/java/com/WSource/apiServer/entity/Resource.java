@@ -2,25 +2,36 @@ package com.WSource.apiServer.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.core.StopFilterFactory;
+import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
+import org.apache.lucene.analysis.standard.StandardFilterFactory;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Parameter;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.CascadeType;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
-
 
 @Getter
 @Setter
 @Entity
 @Table(name="resources")
 @Indexed(index = "idx_resource")
+@AnalyzerDef(name = "ResourceTextAnalyzer",
+        tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+        filters = {
+                @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+                @TokenFilterDef(factory = StandardFilterFactory.class),
+                @TokenFilterDef(factory = StopFilterFactory.class),
+                @TokenFilterDef(factory = SnowballPorterFilterFactory.class,
+                        params = { @Parameter(name = "language", value = "English") }),
+        })
 public class Resource {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -42,10 +53,10 @@ public class Resource {
     @Column
     private String updateAt;
 
-    @Field
+    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO, analyzer=@Analyzer(definition = "ResourceTextAnalyzer"))
     private String title;
 
-    @Field
+    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO, analyzer=@Analyzer(definition = "ResourceTextAnalyzer"))
     @Lob
     @Column(length=1000000)
     private String content;
@@ -69,7 +80,7 @@ public class Resource {
 
     @ColumnDefault("0")
     private Integer viewCount;
-
-    @OneToMany(cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
-    private List<Comment> commentList;
+//
+//    @OneToMany(cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
+//    private List<Comment> commentList;
 }

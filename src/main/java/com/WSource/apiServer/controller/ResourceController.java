@@ -1,10 +1,15 @@
 package com.WSource.apiServer.controller;
 
+import com.WSource.apiServer.entity.Comment;
 import com.WSource.apiServer.entity.Resource;
 import com.WSource.apiServer.entity.User;
+import com.WSource.apiServer.repository.CommentRepository;
 import com.WSource.apiServer.repository.ResourceRepository;
 import com.WSource.apiServer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +26,9 @@ public class ResourceController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @PostMapping(path="/add") // Map ONLY POST Requests
     public @ResponseBody
@@ -91,7 +99,13 @@ public class ResourceController {
         if (!resourceRepository.existsById(id)) {
             return false;
         }
-        resourceRepository.deleteById(id);
+        Resource resource = resourceRepository.findById(id).get();
+        Pageable firstPage = PageRequest.of(0, 100);
+        Page<Comment> commentList = commentRepository.findByResourceId(id, firstPage);
+        for(Comment comment : commentList){
+            commentRepository.delete(comment);
+        }
+        resourceRepository.delete(resource);
         return true;
     }
 

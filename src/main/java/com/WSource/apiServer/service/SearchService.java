@@ -12,8 +12,8 @@ import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
+
 
 @Component
 @Slf4j
@@ -27,6 +27,18 @@ public class SearchService {
                 .forEntity(Resource.class)
                 .get();
         Query foodQuery = qb.keyword().onFields("content","title").matching(word).createQuery();
+        FullTextQuery fullTextQuery = fullTextEntityManager.createFullTextQuery(foodQuery, Resource.class);
+        return (List<Resource>) fullTextQuery.getResultList();
+    }
+
+    public List<Resource> getPostBasedOnWordFuzzy(String word){
+
+        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+        QueryBuilder qb = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
+                .forEntity(Resource.class)
+                .get();
+        Query foodQuery = qb.keyword().fuzzy()
+                .withEditDistanceUpTo(1).onFields("content","title").matching(word).createQuery();
         FullTextQuery fullTextQuery = fullTextEntityManager.createFullTextQuery(foodQuery, Resource.class);
         return (List<Resource>) fullTextQuery.getResultList();
     }
