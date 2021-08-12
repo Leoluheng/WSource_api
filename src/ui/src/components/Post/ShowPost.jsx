@@ -321,7 +321,8 @@ class ShowPost extends React.Component {
                             inputValue={self.state.searchQuery}
                             /*onInputChang is called when typing a new letter*/
                             onInputChange={this.searchOnChange}
-                            /*onChange is called when an option is selected */
+                            /* onChange is called when an option is selected */
+                            // Todo: fix this!!!
                             // When I add onChange, pressing enter breaks the website
                             // couldn't get it to work, similar issue here: https://github.com/mui-org/material-ui/issues/18123
                             // onChange={this.handleSelectSearch}
@@ -333,7 +334,6 @@ class ShowPost extends React.Component {
                                     if (e.keyCode === 13 && e.target.value) {
                                         // setAutoCompleteValue(autoCompleteValue.concat(e.target.value));
                                         console.log(e.target.value)
-
                                         // self.setState({searchQuery: e.target.value, displaySearchQuery: e.target.value})
                                         self.search()
                                     }}}
