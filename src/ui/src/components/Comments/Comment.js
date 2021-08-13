@@ -1,4 +1,6 @@
 import React from "react";
+import Faker from "faker";
+
 import { makeStyles } from "@material-ui/core/styles";
 import {
     List,
@@ -6,10 +8,11 @@ import {
     Divider,
     ListItemText,
     ListItemAvatar,
-    Avatar,
-    Typography
+    Avatar
 } from "@material-ui/core";
-import Faker from "faker";
+
+import NameTag from "../Utils/NameTag";
+import {red} from "@material-ui/core/colors";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -21,7 +24,10 @@ const useStyles = makeStyles(theme => ({
     },
     inline: {
         display: "inline"
-    }
+    },
+    avatar: {
+        backgroundColor: red[500],
+    },
 }));
 
 const Comment = ({ comments }) => {
@@ -34,32 +40,23 @@ const Comment = ({ comments }) => {
                     <React.Fragment key={comment.id}>
                         <ListItem key={comment.id} alignItems="flex-start">
                             <ListItemAvatar>
-                                <Avatar alt="avatar" src={Faker.image.avatar()} />
+                                {/*<Avatar alt="avatar" src={Faker.image.avatar()} />*/}
+                                <Avatar aria-label="recipe" className={classes.avatar}>
+                                    {comment.user.name.charAt(0).toUpperCase()}
+                                </Avatar>
                             </ListItemAvatar>
                             <ListItemText
                                 primary={
-                                    <Typography className={classes.fonts}>
-                                        {/*{comment.name}*/}
-                                        Andy
-                                    </Typography>
+                                    <NameTag user={comment.user}/>
                                 }
                                 secondary={
                                     <>
-                                        <Typography
-                                            component="span"
-                                            variant="body2"
-                                            className={classes.inline}
-                                            color="textPrimary"
-                                        >
-                                            {/*{comment.email}*/}
-                                            2B Student
-                                        </Typography>
-                                        {` - ${comment.review}`}
+                                        {`${comment.review}`}
                                     </>
                                 }
                             />
                         </ListItem>
-                        <Divider />
+                        <Divider variant="middle" />
                     </React.Fragment>
                 );
             })}

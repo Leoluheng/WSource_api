@@ -25,4 +25,9 @@ public class SearchController {
         return searchService.getPostBasedOnWord(word);
     }
 
+    @GetMapping("/resourceFuzzy")
+    public List<Resource> getPostByWordFuzzy(@RequestParam String word){
+        return searchService.getPostBasedOnWordFuzzy(word);
+    }
+
 }

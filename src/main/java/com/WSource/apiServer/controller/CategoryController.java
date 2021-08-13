@@ -6,7 +6,6 @@ import com.WSource.apiServer.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.catalog.Catalog;
 import java.util.List;
 
 @RestController
@@ -17,14 +16,14 @@ public class CategoryController {
 
     @PostMapping(path="/add") // Map ONLY POST Requests
     public @ResponseBody
-    String addResource(@RequestBody Category category) {
+    String addCategory(@RequestBody Category category) {
         categoryRepository.save(category);
         return "Saved";
     }
 
     @GetMapping(path="/all")
     public @ResponseBody
-    List<Category> getAllResources() {
+    List<Category> getAllCategory() {
         List<Category> categoryList = null;
         try {
             categoryList = (List<Category>) categoryRepository.findAll();
@@ -32,6 +31,16 @@ public class CategoryController {
             System.out.println(e);
         }
         return categoryList;
+    }
+
+    @PostMapping(path="/update")
+    public @ResponseBody
+    Boolean deleteById(@RequestParam int id, @RequestBody Category category) {
+        if (!categoryRepository.existsById(id)) {
+            return false;
+        }
+        categoryRepository.save(category);
+        return true;
     }
 
     @DeleteMapping(path="/delete")

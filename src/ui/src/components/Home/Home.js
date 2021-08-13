@@ -8,7 +8,7 @@ function Home(props) {
         axios.get(API_BASE_URL + '/user/me', {headers: {'token': localStorage.getItem(ACCESS_TOKEN_NAME)}})
             .then(function (response) {
                 console.log(response)
-                if (response.status !== 200 && response.status !== 202) {
+                if (response.status !== 202) {
                     redirectToLogin()
                 }
             })
@@ -18,6 +18,9 @@ function Home(props) {
     })
 
     function redirectToLogin() {
+        if (localStorage.getItem(ACCESS_TOKEN_NAME)) {
+            localStorage.removeItem(ACCESS_TOKEN_NAME)
+        }
         props.history.push('/login');
     }
 

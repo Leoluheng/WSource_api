@@ -11,15 +11,18 @@
 	<groupId>com.WSource</groupId>
 	<artifactId>apiServer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>apiServer</name>
+	<name>wsource-api</name>
 	<description>2022 SE Capstone project backend api server</description>
 	<properties>
 		<java.version>11</java.version>
+		<!--jar package name-->
+		<jar.finalName>${project.name}-${project.version}</jar.finalName>
 		<spring-security.version>5.3.4.RELEASE</spring-security.version>
 		<spring.version>5.2.8.RELEASE</spring.version>
 		<hibernate-search.version>5.11.7.Final</hibernate-search.version>
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -94,7 +97,10 @@
 		</dependency>
 	</dependencies>
 
+	<packaging>jar</packaging>
 	<build>
+		<!-- Specify jar package name-->
+		<finalName>${jar.finalName}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

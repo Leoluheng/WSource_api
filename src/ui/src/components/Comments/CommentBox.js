@@ -64,7 +64,7 @@ export default function CommentBox(props) {
                     {/*    <span>User Name</span>*/}
                     {/*</div>*/}
                 </div>
-                <label htmlFor="comment comment-page">What are your thoughts?</label>
+                <label htmlFor="comment comment-page">Add a comment</label>
                 <textarea
                     ref={textRef}
                     onClick={onExpand}

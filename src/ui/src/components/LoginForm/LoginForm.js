@@ -63,12 +63,10 @@ function LoginForm(props) {
         }
     }
     const redirectToHome = () => {
-        props.updateTitle('Home')
         props.history.push('/home');
     }
     const redirectToRegister = () => {
         props.history.push('/register');
-        props.updateTitle('Register');
     }
 
     const useStyles = makeStyles((theme) => ({
