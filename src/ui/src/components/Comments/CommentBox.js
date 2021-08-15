@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import cn from "classnames";
 import useDynamicHeightField from "./useDynamicHeightField";
 import "./CommentBox.css";
+import { Button } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
 
 const INITIAL_HEIGHT = 46;
 
@@ -17,6 +19,20 @@ export default function CommentBox(props) {
     const textRef = useRef(null);
     const containerRef = useRef(null);
     useDynamicHeightField(textRef, commentValue);
+
+    const useStyles = makeStyles((theme) => ({
+        submit: {
+            // margin: theme.spacing(3, 0, 2),
+            background: '#FFC100',
+            color: 'white',
+            borderRadius: 10,
+            height: '40px',
+            '&:hover': {
+                backgroundColor: 'white',
+                color: '#ffbf00',
+                },
+        },
+    }));
 
     const onExpand = () => {
         if (!isExpanded) {
@@ -41,10 +57,12 @@ export default function CommentBox(props) {
         console.log("send the form data somewhere");
     };
 
+    const classes = useStyles();
+
     return (
         <div className="container comment-page">
             <form
-                onSubmit={onSubmit}
+                // onSubmit={onSubmit}
                 ref={containerRef}
                 className={cn("comment-box comment-page", {
                     expanded: isExpanded,
@@ -80,9 +98,9 @@ export default function CommentBox(props) {
                     <button type="button" className="cancel comment-page" onClick={onClose}>
                         Cancel
                     </button>
-                    <button type="submit" className="comment-page" disabled={commentValue.length < 1}>
+                    <Button onClick={onSubmit} className={classes.submit} disabled={commentValue.length < 1}>
                         Respond
-                    </button>
+                    </Button>
                 </div>
             </form>
         </div>

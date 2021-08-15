@@ -1,3 +1,3 @@
-export const categories= ['academic', 'life', 'campus', 'current_student', 'incoming_student', 'alumni', 'housing',
-    'part-time_opportunities', 'scholarship', 'offices'
+export const categories= ['academic', 'life', 'campus', 'current student', 'incoming student', 'alumni', 'housing',
+    'part time opportunities', 'scholarship', 'offices'
 ]
