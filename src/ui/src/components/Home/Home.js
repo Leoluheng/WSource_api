@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     publicHome: {
         flexGrow: 1,
         padding: theme.spacing(8, 4, 6),
-        backgroundColor: theme.palette.grey[100],
+        // backgroundColor: theme.palette.grey[100],
     },
     main: {
         position: 'relative',
@@ -68,8 +68,9 @@ const useStyles = makeStyles((theme) => ({
     },
     explore: {
         // margin: theme.spacing(3, 0, 2),
-        background: '#FFC100',
-        borderRadius: 20,
+        background: 'black',
+        color: '#FFC100',
+        borderRadius: 10,
         height: '50px',
         '&:hover': {
             backgroundColor: 'white',
@@ -96,6 +97,9 @@ const useStyles = makeStyles((theme) => ({
         height: 140,
         maxHeight: '100%',
         display: 'block',
+    },
+    bold: {
+        fontWeight:600
     }
 }));
 /* for demo purpose - copied directly from PublicHome ========= end */
@@ -135,11 +139,11 @@ function Home(props) {
                 <Grid container className={classes.mainGrid}>
                     <Grid item md={6}>
                         <div className={classes.title}>
-                            <Typography component="h1" variant="h3" color="inherit" gutterBottom>
+                            <Typography component="h1" variant="h2" color="inherit" gutterBottom className={classes.bold} >
                                 One-stop shop for University Resources
                             </Typography>
                             <Typography variant="h5" color="inherit" paragraph>
-                                · Explore university resources
+                                Explore university resources
                                 · Read UW service review
                                 · Join community
                             </Typography>
