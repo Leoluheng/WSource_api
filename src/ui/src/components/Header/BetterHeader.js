@@ -32,8 +32,6 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
     },
     header: {
-        // backgroundColor: '#fff4db',
-        // color: 'black'
         backgroundColor: 'white',
         color: '#FFB931'
     },
@@ -42,7 +40,10 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         flexGrow: 1,
-        color: '#FFB931'
+        color: '#FFB931',
+        '&:hover': {
+            cursor: 'pointer'
+        }
     },
     signup: {
         margin: theme.spacing(3, 0, 2),
@@ -228,7 +229,7 @@ function BetterHeader(props) {
                         <MenuIcon />
                     </IconButton>
                     <div className={classes.title}>
-                        <img src={frame} onClick={() => handleToHome}/>
+                        <img src={frame} onClick={() => handleToHome()}/>
                     </div>
                     {/* <Typography align='left' variant='h4' className={classes.title} onClick={handleToHome} > */}
                         {/* <Typography variant="button" color='primary'> */}
