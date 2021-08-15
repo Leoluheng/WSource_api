@@ -149,7 +149,7 @@ function PublicHome(props) {
                 <Grid container className={classes.mainGrid}>
                     <Grid item md={6}>
                         <div className={classes.title}>
-                            <Typography component="h1" variant="h1" color="inherit" gutterBottom className={classes.bold} >
+                            <Typography component="h1" variant="h2" color="inherit" gutterBottom className={classes.bold} >
                                 One-stop shop for University Resources
                             </Typography>
                             <Typography variant="h5" color="inherit" paragraph>
@@ -191,7 +191,7 @@ function PublicHome(props) {
                 <Grid container item xs={12}>
                     <Grid item lg={3} className={classes.topicCard}>
                         <Card className={classes.topicRoot}>
-                            <CardActionArea>
+                            <CardActionArea onClick={() => props.history.push('/official/housing')}>
                                 <CardMedia
                                     className={classes.topicMedia}
                                     image={housing}
@@ -207,7 +207,7 @@ function PublicHome(props) {
                     </Grid>
                     <Grid item lg={3} className={classes.topicCard}>
                         <Card className={classes.topicRoot}>
-                            <CardActionArea>
+                            <CardActionArea onClick={() => props.history.push('/official/scholarship')}>
                                 <CardMedia
                                     className={classes.topicMedia}
                                     image={scholarship}
@@ -223,7 +223,7 @@ function PublicHome(props) {
                     </Grid>
                     <Grid item lg={3} className={classes.topicCard}>
                         <Card className={classes.topicRoot}>
-                            <CardActionArea>
+                            <CardActionArea onClick={() => props.history.push('/official/part-time_opportunities')}>
                                 <CardMedia
                                     className={classes.topicMedia}
                                     image={ptOpportunity}
@@ -239,7 +239,7 @@ function PublicHome(props) {
                     </Grid>
                     <Grid item lg={3} className={classes.topicCard}>
                         <Card className={classes.topicRoot}>
-                            <CardActionArea>
+                            <CardActionArea onClick={() => props.history.push('/official/offices')}>
                                 <CardMedia
                                     className={classes.topicMedia}
                                     image={office}

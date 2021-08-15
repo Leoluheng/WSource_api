@@ -33,5 +33,5 @@ CREATE TABLE IF NOT EXISTS `category` (
   PRIMARY KEY (`id`)
 );
 
-INSERT IGNORE INTO `category` (id, type) 
+INSERT IGNORE INTO `category` (id, type)
 VALUES (1, 'academic'), (2,'life'), (3,'campus'), (4, 'current_student'), (5, 'incoming_student'), (6, 'alumni');
