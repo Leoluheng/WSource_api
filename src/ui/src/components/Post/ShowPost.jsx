@@ -482,9 +482,6 @@ class ShowPost extends React.Component {
                             <Grid item xs={3} sm={3} md={3}>
                                 <Vote vote={curPost.voteCount} postId={curPost.id} />
                             </Grid>
-                        </Grid>
-                        
-                        <Grid container xs={12} >
                             <Grid item xs={12}>
                                 <Typography gutterBottom variant="h5" component="h5" className={this.props.classes.bold}>
                                     {curPost.title}
