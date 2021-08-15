@@ -318,7 +318,7 @@ class ShowPost extends React.Component {
 
     renderPostList(){
         const { activeTabIndex } = this.state;
-        const height = this.state.resourceType === 'Service' ? 850 : 800;
+        const height = this.state.resourceType === 'Service' ? 850 : 780;
         var self = this
         return (
             <Grid container component={Paper} elevation={3} >
@@ -511,18 +511,14 @@ class ShowPost extends React.Component {
             <div>
                 <Grid container spacing={2} className={classes.layout}>
                     <Grid item xs={4} sm={4} md={4}>
-                        {/* <Paper className="post-list" elevation={5}> */}
-                            {
-                                this.renderPostList()
-                            }
-                        {/* </Paper> */}
+                        {
+                            this.renderPostList()
+                        }
                     </Grid>
                     <Grid item xs={8} sm={8} md={8}>
-                        {/* <Paper className="content" elevation={5} > */}
-                            {
-                                this.renderContent()
-                            }
-                        {/* </Paper> */}
+                        {
+                            this.renderContent()
+                        }
                     </Grid>
                 </Grid>
             </div>

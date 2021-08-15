@@ -223,7 +223,7 @@ function BetterHeader(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" className={classes.header} elevation={10}>
+            <AppBar position="static" className={classes.header} elevation={2}>
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton} color="primary" aria-label="menu" onClick={toggleDrawer(true)}>
                         <MenuIcon />
