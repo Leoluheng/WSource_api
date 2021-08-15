@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -22,6 +21,8 @@ import ForumIcon from '@material-ui/icons/Forum';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import logo from './../../assets/logo512.png';
+import frame from './../../assets/frame.svg';
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -31,14 +32,38 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
     },
     header: {
-        backgroundColor: '#fff4db',
-        color: 'black'
+        // backgroundColor: '#fff4db',
+        // color: 'black'
+        backgroundColor: 'white',
+        color: '#FFB931'
     },
     menuButton: {
         marginRight: theme.spacing(2),
     },
     title: {
         flexGrow: 1,
+        color: '#FFB931'
+    },
+    signup: {
+        margin: theme.spacing(3, 0, 2),
+        background: '#FFC100',
+        color: 'white',
+        borderRadius: 10,
+        height: '40px',
+        '&:hover': {
+          backgroundColor: 'white',
+          color: '#ffbf00',
+          },
+    },
+    login: {
+        margin: theme.spacing(3, 0, 2),
+        color: '#ffbf00',
+        borderRadius: 10,
+        height: '40px',
+        '&:hover': {
+            backgroundColor: 'white',
+            color: '#BD871D',
+        },
     },
 }));
 
@@ -111,8 +136,8 @@ function BetterHeader(props) {
         if (!localStorage.getItem(ACCESS_TOKEN_NAME)) {
             return (
                 <Box>
-                    <Button color="inherit" onClick={handleLogin}>Login</Button>
-                    <Button color="inherit" onClick={handleRegister}>Sign up</Button>
+                    <Button className={classes.login} onClick={handleLogin}>Login</Button>
+                    <Button className={classes.signup}  onClick={handleRegister}>Sign up</Button>
                 </Box>
             )
         }
@@ -197,16 +222,19 @@ function BetterHeader(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" className={classes.header}>
+            <AppBar position="static" className={classes.header} elevation={10}>
                 <Toolbar>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
+                    <IconButton edge="start" className={classes.menuButton} color="primary" aria-label="menu" onClick={toggleDrawer(true)}>
                         <MenuIcon />
                     </IconButton>
-                    <Button className={classes.title} onClick={handleToHome} >
-                        <Typography variant="button">
-                            WSource
-                        </Typography>
-                    </Button>
+                    <div className={classes.title}>
+                        <img src={frame} onClick={() => handleToHome}/>
+                    </div>
+                    {/* <Typography align='left' variant='h4' className={classes.title} onClick={handleToHome} > */}
+                        {/* <Typography variant="button" color='primary'> */}
+                            {/* WSource */}
+                        {/* </Typography> */}
+                    {/* </Typography> */}
                     {renderLogin()}
                     {renderLogout()}
                     {renderAccountCircle()}

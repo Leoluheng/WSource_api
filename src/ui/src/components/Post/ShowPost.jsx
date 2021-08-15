@@ -93,16 +93,26 @@ const styles = (theme) => ({
         margin: theme.spacing(1, 0, 3, 3),
         background: '#FFC100',
         color: 'white',
-        borderRadius: 20,
+        borderRadius: 10,
         height: '40px',
         '&:hover': {
           backgroundColor: 'white',
           color: '#ffbf00',
           },
-      },
-      searchBox: {
-          borderRadius: '20px'
-      }
+    },
+    write: {
+        margin: theme.spacing(1, 0, 3, 3),
+        background: 'black',
+        color: '#FFC100',
+        borderRadius: 10,
+        height: '40px',
+        // '&:hover': {
+        //   color: 'white',
+        //   },
+    },
+    searchBox: {
+        borderRadius: '20px'
+    }
 })
 
 class ShowPost extends React.Component {
@@ -244,13 +254,13 @@ class ShowPost extends React.Component {
             .then(function (response) {
                 if ( response.status !== 202) {
                     self.redirectToLogin()
+                } else {
+                    self.props.history.push(`/AddPost/${self.state.resourceType}`)
                 }
             })
             .catch(function (error) {
                 self.redirectToLogin()
             });
-
-        this.props.history.push(`/AddPost/${this.state.resourceType}`)
     }
 
     redirectToLogin() {
@@ -308,6 +318,7 @@ class ShowPost extends React.Component {
 
     renderPostList(){
         const { activeTabIndex } = this.state;
+        const height = this.state.resourceType === 'Service' ? 850 : 800;
         var self = this
         return (
             <Grid container component={Paper} elevation={3} >
@@ -328,7 +339,7 @@ class ShowPost extends React.Component {
                             // onChange={this.handleSelectSearch}
                             getOptionLabel={(option)=> option.title ? option.title : '' }
                             renderInput={(params) => (
-                                <TextField {...params} label="Search Posts..." variant="outlined"
+                                <TextField {...params} label="Search Here" variant="outlined"
                                     // Try to get enter key to work without pressing on the search button
                                            onKeyDown={e => {
                                     if (e.keyCode === 13 && e.target.value) {
@@ -380,22 +391,26 @@ class ShowPost extends React.Component {
                             </FormControl>
                         </Grid>
                     </Grid>
-                    <Grid container xs={12}>
-                        <Grid item xs={10}>
-                            <Tabs value={activeTabIndex} onChange={this.handleChangeTab} variant="fullWidth" centered>
-                                <Tab label="Recent" />
-                                <Tab label="Trending" />
-                            </Tabs>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <button type="button" onClick={this.redirectToAddPost} id="addPost" name="Create Post"
-                                className="btn btn-primary pull-right">New
-                            </button>
-                        </Grid>
-                    </Grid>
+                    { this.state.resourceType !== 'Service' && 
+                        (
+                            <Grid container xs={12}>
+                                <Grid item xs={9}>
+                                    <Tabs value={activeTabIndex} onChange={this.handleChangeTab} variant="fullWidth" centered>
+                                        <Tab label="Recent" />
+                                        <Tab label="Trending" />
+                                    </Tabs>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Button onClick={this.redirectToAddPost} id="addPost"
+                                        className={this.props.classes.write}>New
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        )
+                    }
                 </Grid>
                 
-                <Grid container component={Paper} elevation={0} style={{minHeight: 800, maxHeight: 800, overflow: 'auto'}} >
+                <Grid container component={Paper} elevation={0} style={{minHeight: height, maxHeight: height, overflow: 'auto'}} >
                     { this.state.displayPosts.length?
                         (
                             <Grid container xs={12} className={this.props.classes.list}>
@@ -418,7 +433,7 @@ class ShowPost extends React.Component {
                                 }
                                 {
                                     this.state.displayPosts.map((post, index) => {
-                                        return <PostTitle value={post} onClick={self.updateCurrentPost} classes={this.props.classes}/>
+                                        return <PostTitle resourceType={this.state.resourceType} value={post} onClick={self.updateCurrentPost} classes={this.props.classes}/>
                                     })
                                 }
                             </Grid>
@@ -459,7 +474,7 @@ class ShowPost extends React.Component {
             }
             const curPost = this.state.curPost
             return (
-                    <Grid container xs component={Paper} elevation={3} style={{minHeight: 1050, maxHeight: 1050, overflow: 'auto'}} className={this.props.classes.post}>
+                    <Grid container xs component={Paper} elevation={3} style={{minHeight: 1055, maxHeight: 1055, overflow: 'auto'}} className={this.props.classes.post}>
                         <Grid container xs={12}>
                             <Grid item xs={9} sm={9} md={9}>
                                 <PostHeader post={curPost}/>

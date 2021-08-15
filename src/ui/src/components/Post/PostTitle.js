@@ -17,7 +17,7 @@ export default class PostTitle extends React.Component {
         return (
             <Card>
                 <CardActionArea onClick={this.handleClick}>
-                    <PostHeader post={post}/>
+                    { this.props.resourceType !== 'Service' && <PostHeader post={post}/> }
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="h2">
                             {post.title}
