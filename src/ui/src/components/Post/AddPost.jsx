@@ -28,6 +28,28 @@ const styles = (theme) => ({
     title: {
         margin: theme.spacing(4, 0, 2),
     },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+        background: '#FFC100',
+        color: 'white',
+        borderRadius: 10,
+        height: '50px',
+        '&:hover': {
+            backgroundColor: 'white',
+            color: '#ffbf00',
+            },
+    },
+    cancel: {
+        margin: theme.spacing(3, 0, 2),
+        background: 'white',
+        color: '#ffbf00',
+        borderRadius: 10,
+        height: '50px',
+        '&:hover': {
+            backgroundColor: 'white',
+            color: '#FFC100',
+        },
+    },
 })
 
 
@@ -267,26 +289,27 @@ class AddPost extends React.Component {
                 >
                     {
                         this.state.isModify ?
-                            (<Button variant="contained" color="primary"
-                                     onClick={this.modifyPost} name="submit">
-                                Update Post
-                            </Button>) :
-                            (<Button variant="contained" color="primary"
-                                     onClick={this.addPost} name="submit">
-                                Submit Post
-                            </Button>)
-                    }
-                    {
-                        this.state.isModify ?
-                            (<Button variant="contained" color="secondary"
+                            (<Button variant="contained" className={this.props.classes.cancel}
                                      onClick={this.redirectToManagePost} name="cancel">
                                 Cancel
                             </Button>):
-                            (<Button variant="contained" color="secondary"
+                            (<Button variant="contained" className={this.props.classes.cancel}
                                      onClick={this.redirectToShowPost} name="cancel">
                                 Cancel
                             </Button>)
                     }
+                    {
+                        this.state.isModify ?
+                            (<Button variant="contained" className={this.props.classes.submit}
+                                     onClick={this.modifyPost} name="submit">
+                                Update Post
+                            </Button>) :
+                            (<Button variant="contained" className={this.props.classes.submit}
+                                     onClick={this.addPost} name="submit">
+                                Submit Post
+                            </Button>)
+                    }
+                    
                 </Box>
             </div>
         )
