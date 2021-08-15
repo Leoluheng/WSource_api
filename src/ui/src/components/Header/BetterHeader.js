@@ -123,6 +123,9 @@ function BetterHeader(props) {
     function handleToHome() {
         props.history.push('/')
     }
+    function handleToUserHome() {
+        props.history.push('/home')
+    }
 
     function handleToProfile() {
         handleMenuClose();
@@ -179,7 +182,7 @@ function BetterHeader(props) {
             >
                 <List>
                     <Divider />
-                    <ListItem button key={"Home"} onClick={handleToHome}>
+                    <ListItem button key={"Home"} onClick={handleToUserHome}>
                         <ListItemIcon> <HomeIcon /> </ListItemIcon>
                         <ListItemText primary={"Home"} />
                     </ListItem>

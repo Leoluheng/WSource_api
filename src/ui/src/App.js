@@ -28,9 +28,6 @@ function App() {
                             <Route path="/login">
                                 <LoginForm showError={updateErrorMessage}/>
                             </Route>
-                            <PrivateRoute path="/home">
-                                <Home/>
-                            </PrivateRoute>
                             <Route path="/addPost/:resourceType">
                                 <AddPost showError={updateErrorMessage}/>
                             </Route>
@@ -43,6 +40,9 @@ function App() {
                         <Route path="/" exact={true}>
                             <PublicHome />
                         </Route>
+                        <PrivateRoute path="/home">
+                            <Home/>
+                        </PrivateRoute>
                         <Route path="/Community">
                             <ShowPost resourceType={"Community"} showError={updateErrorMessage}/>
                         </Route>
